@@ -5,11 +5,13 @@ import { factions } from "../data/factions";
 import { councilors } from "../data/councilors";
 import { units } from "../data/units";
 import { developments, getFactionTree } from "../data/developments";
+import { buildings } from "../data/buildings";
 import CouncilorCard from "../components/CouncilorCard.astro";
 import UnitCard from "../components/UnitCard.astro";
 import DevelopmentCard from "../components/DevelopmentCard.astro";
+import BuildingCard from "../components/BuildingCard.astro";
 import DevTree from "../components/DevTree.astro";
-import type { FactionId, DevelopmentTree } from "../data/types";
+import type { FactionId, DevelopmentTree, BuildingCategory } from "../data/types";
 
 export function getStaticPaths() {
 	return factions.map((f) => ({ params: { faction: f.id } }));
@@ -58,6 +60,43 @@ const uniqueByBranch = TREE_ORDER.map((tree, i) => ({
   subNumber: i + 1,
   items: developments.filter((d) => d.faction === faction && d.tree === tree),
 })).filter((g) => g.items.length > 0);
+
+// Unique buildings: only available to this faction
+const BUILDING_CATEGORY_LABELS: Record<BuildingCategory, string> = {
+  'village-economy':        'Village — Economy',
+  'village-military':       'Village — Military',
+  'village-statecraft':     'Village — Statecraft',
+  'mainbase-economy':       'Main Base — Economy',
+  'mainbase-military':      'Main Base — Military',
+  'mainbase-statecraft':    'Main Base — Statecraft',
+  'underworld-economy':     'Underworld HQ — Economy',
+  'underworld-military':    'Underworld HQ — Military',
+  'underworld-statecraft':  'Underworld HQ — Statecraft',
+  'underworld-mainbase':    'Underworld HQ — Enemy Main Base',
+  'sietch-economy':         'Sietch Settlement — Economy',
+  'sietch-military':        'Sietch Settlement — Military',
+  'sietch-statecraft':      'Sietch Settlement — Statecraft',
+};
+
+const BUILDING_CATEGORY_ORDER: BuildingCategory[] = [
+  'village-economy', 'village-military', 'village-statecraft',
+  'mainbase-economy', 'mainbase-military', 'mainbase-statecraft',
+  'underworld-economy', 'underworld-military', 'underworld-statecraft', 'underworld-mainbase',
+  'sietch-economy', 'sietch-military', 'sietch-statecraft',
+];
+
+const factionUniqueBuildings = buildings.filter(
+  (b) => Array.isArray(b.factions) && b.factions.length === 1 && b.factions[0] === faction
+);
+
+const buildingsByCategory = BUILDING_CATEGORY_ORDER
+  .map((cat, i) => ({
+    cat,
+    label: BUILDING_CATEGORY_LABELS[cat],
+    subNumber: i + 1,
+    items: factionUniqueBuildings.filter((b) => b.category === cat),
+  }))
+  .filter((g) => g.items.length > 0);
 ---
 
 <Layout
@@ -132,6 +171,18 @@ const uniqueByBranch = TREE_ORDER.map((tree, i) => ({
 							))
 						}
 					</ul>
+					{buildingsByCategory.length > 0 && (
+						<>
+							<a href="#unique-buildings"><li><strong>5.0 | Unique Buildings</strong></li></a>
+							<ul>
+								{buildingsByCategory.map((g, i) => (
+									<a href={`#bcat-${g.cat}`}>
+										<li>5.{i + 1} | {g.label}</li>
+									</a>
+								))}
+							</ul>
+						</>
+					)}
 				</ul>
 			</div>
 		</div>
@@ -225,6 +276,26 @@ const uniqueByBranch = TREE_ORDER.map((tree, i) => ({
 			))
 		}
 		<!-- END DEVELOPMENTS -->
+
+		<!-- UNIQUE BUILDINGS -->
+		{buildingsByCategory.length > 0 && (
+			<>
+				<header id="header"></header>
+				<h2 id="unique-buildings">Unique Buildings</h2>
+				<p style="font-size:0.85rem;opacity:0.7;margin-bottom:1.5rem;">
+					Buildings exclusively available to {fd.name}.
+				</p>
+				{buildingsByCategory.map((g) => (
+					<>
+						<h3 id={`bcat-${g.cat}`}>{g.label}</h3>
+						{g.items.map((b) => (
+							<BuildingCard building={b} />
+						))}
+					</>
+				))}
+			</>
+		)}
+		<!-- END UNIQUE BUILDINGS -->
 	</section>
 </Layout>
 

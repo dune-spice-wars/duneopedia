@@ -1,7 +1,7 @@
 ---
-import type { Building, FactionId } from '../data/types';
-import { developments } from '../data/developments';
-import CostDisplay from './CostDisplay.astro';
+import type { Building, FactionId } from "../data/types";
+import { developments } from "../data/developments";
+import CostDisplay from "./CostDisplay.astro";
 
 interface Props {
   building: Building;
@@ -10,52 +10,96 @@ interface Props {
 const { building } = Astro.props;
 
 const dev = building.developmentRequired
-  ? developments.find(d => d.id === building.developmentRequired)
+  ? developments.find((d) => d.id === building.developmentRequired)
   : null;
 
 const FACTION_LABELS: Record<FactionId, string> = {
-  atreides:  'Atreides',
-  harkonnen: 'Harkonnen',
-  smugglers: 'Smugglers',
-  fremen:    'Fremen',
-  corrino:   'Corrino',
-  ecaz:      'Ecaz',
+  atreides: "Atreides",
+  harkonnen: "Harkonnen",
+  smugglers: "Smugglers",
+  fremen: "Fremen",
+  corrino: "Corrino",
+  ecaz: "Ecaz",
+  vernius: "Vernius",
 };
 ---
 
 <h4 id={building.id}>
-  {building.image && (
-    <img src={building.image} style="height:48px;vertical-align:middle;margin-right:8px;" alt={`${building.name} icon`} />
-  )}
+  {
+    building.image && (
+      <img
+        src={building.image}
+        style="height:48px;vertical-align:middle;margin-right:8px;"
+        alt={`${building.name} icon`}
+      />
+    )
+  }
   {building.name}
 </h4>
 <ul>
   <li><strong>Cost</strong>: <CostDisplay cost={building.cost} /></li>
   <li><strong>Upkeep</strong>: <CostDisplay cost={building.upkeep} /></li>
-  <li><strong>Construction time</strong>: {building.constructionTimeDays} Days</li>
   <li>
-    <strong>Development required</strong>:{' '}
-    {dev
-      ? <a class="link" target="_blank" href={`${import.meta.env.BASE_URL}developments#${dev.id}`}>{dev.name}</a>
-      : 'None'}
+    <strong>Construction time</strong>: {building.constructionTimeDays} Days
   </li>
-  {building.prerequisite && (
-    <li><strong>Prerequisite</strong>: {building.prerequisite}</li>
-  )}
   <li>
-    <strong>Factions</strong>:{' '}
-    {building.factions === 'all'
-      ? <a class="link" target="_blank" href={`${import.meta.env.BASE_URL}factions`}>All</a>
-      : building.factions.map((f, i) => (
+    <strong>Development required</strong>:{" "}
+    {
+      dev ? (
+        <a
+          class="link"
+          target="_blank"
+          href={`${import.meta.env.BASE_URL}developments#${dev.id}`}
+        >
+          {dev.name}
+        </a>
+      ) : (
+        "None"
+      )
+    }
+  </li>
+  {
+    building.prerequisite && (
+      <li>
+        <strong>Prerequisite</strong>: {building.prerequisite}
+      </li>
+    )
+  }
+  <li>
+    <strong>Factions</strong>:{" "}
+    {
+      building.factions === "all" ? (
+        <a
+          class="link"
+          target="_blank"
+          href={`${import.meta.env.BASE_URL}factions`}
+        >
+          All
+        </a>
+      ) : (
+        building.factions.map((f, i) => (
           <>
-            {i > 0 && ' | '}
-            <a class="link" target="_blank" href={`${import.meta.env.BASE_URL}${f}`}>{FACTION_LABELS[f]}</a>
+            {i > 0 && " | "}
+            <a
+              class="link"
+              target="_blank"
+              href={`${import.meta.env.BASE_URL}${f}`}
+            >
+              {FACTION_LABELS[f]}
+            </a>
           </>
         ))
+      )
     }
   </li>
   <p></p>
-  {building.effects.map(effect => <li><strong>{effect}</strong></li>)}
+  {
+    building.effects.map((effect) => (
+      <li>
+        <strong>{effect}</strong>
+      </li>
+    ))
+  }
   {building.notes && <li>{building.notes}</li>}
 </ul>
 
