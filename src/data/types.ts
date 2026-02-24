@@ -191,6 +191,13 @@ export interface SpecialRegion {
   effects: string[];
 }
 
+export interface SietchTrait {
+  id: string;
+  name: string;
+  category: 'economic' | 'military' | 'statecraft';
+  effects: string[];
+}
+
 // ──────────────────────────────────────────────
 // Community patch delta types
 // ──────────────────────────────────────────────

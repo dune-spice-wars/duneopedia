@@ -1,4 +1,4 @@
-import type { VillageTrait, Resource, SpecialRegion } from './types';
+import type { VillageTrait, Resource, SpecialRegion, SietchTrait } from './types';
 
 // ──────────────────────────────────────────────
 // Village Traits
@@ -6,27 +6,80 @@ import type { VillageTrait, Resource, SpecialRegion } from './types';
 
 export const villageTraits: VillageTrait[] = [
   {
+    id: 'analysts',
+    name: 'Analysts',
+    effects: ['+2 Intel production with one building of each type'],
+  },
+  {
+    id: 'bartering-customs',
+    name: 'Bartering Customs',
+    effects: ['+3 Solari per Economy building'],
+  },
+  {
     id: 'connections',
     name: 'Connections',
-    effects: ['-5% Authority cost to annex a village'],
+    effects: ['+30% agent recruitment speed'],
+  },
+  {
+    id: 'data-brokers',
+    name: 'Data Brokers',
+    effects: ['+3 Solari per Statecraft building'],
   },
   {
     id: 'desert-miners',
     name: 'Desert Miners',
-    effects: ['+8 Plascrete production'],
+    effects: ['+1 Plascrete per Economy building'],
+  },
+  {
+    id: 'former-smugglers',
+    name: 'Former Smugglers',
+    effects: ['+10% resources from pillaging villages'],
+  },
+  {
+    id: 'former-soldiers',
+    name: 'Former Soldiers',
+    effects: ['+1 Militia slot'],
   },
   {
     id: 'glass-sculptors',
     name: 'Glass Sculptors',
-    effects: ["Gain 20% of the village's Plascrete production as Solari production"],
+    effects: ["50% of the village's Plascrete production as Solari production"],
   },
   {
     id: 'handymen',
     name: 'Handymen',
     effects: [
-      '-50% Buildings construction cost',
-      'New Building slots cost -50% in this Village',
+      '-40% Buildings construction cost',
+      '-40% new Building slot costs in this Village',
     ],
+  },
+  {
+    id: 'hardworkers',
+    name: 'Hardworkers',
+    effects: ['+10% regional resource production'],
+  },
+  {
+    id: 'industrious',
+    name: 'Industrious',
+    effects: [
+      '+1 Plascrete Factory limit',
+      '+20% Plascrete Factory production',
+    ],
+  },
+  {
+    id: 'ingenious-mind',
+    name: 'Ingenious Mind',
+    effects: ['+20% Economy building production'],
+  },
+  {
+    id: 'local-sourcing',
+    name: 'Local Sourcing',
+    effects: ['+10 Solari with one building of each type'],
+  },
+  {
+    id: 'plunderers',
+    name: 'Plunderers',
+    effects: ['+3 Solari per Military building'],
   },
   {
     id: 'scavenger-network',
@@ -38,28 +91,51 @@ export const villageTraits: VillageTrait[] = [
     name: 'Scientists',
     effects: [
       '+1 Research Hub limit',
-      '+30% Research Hub resource production',
+      '+20% Research Hub production',
     ],
+  },
+  {
+    id: 'scholarly',
+    name: 'Scholarly',
+    effects: ['+20% Statecraft building production'],
   },
   {
     id: 'strong-network',
     name: 'Strong Network',
-    effects: ['+1 Intel production'],
+    effects: ['+1 Intel per Statecraft building'],
   },
   {
     id: 'strong-willed',
     name: 'Strong-Willed',
-    effects: ['+2 Manpower production'],
+    effects: ['+1 Manpower with one building of each type'],
+  },
+  {
+    id: 'versatile',
+    name: 'Versatile',
+    effects: ['+20% resource production with mixed building types'],
+  },
+  {
+    id: 'water-traders',
+    name: 'Water Traders',
+    effects: ["100% of the village's Water production as Solari"],
   },
   {
     id: 'way-of-the-desert',
     name: 'Way of the Desert',
-    effects: ['+20% Experience gains for all your military Units'],
+    effects: ['+20% Experience gains for all military Units'],
   },
   {
-    id: 'merchants',
-    name: 'Merchants',
-    effects: ['+6 Solari production'],
+    id: 'well-diggers',
+    name: 'Well Diggers',
+    effects: ['+3 Water production'],
+  },
+  {
+    id: 'youthful-eagerness',
+    name: 'Youthful Eagerness',
+    effects: [
+      '+1 Recruitment Office limit',
+      '+20% Recruitment Office production',
+    ],
   },
 ];
 
@@ -382,5 +458,84 @@ export const specialRegions: SpecialRegion[] = [
       'Military units attract Sandworms 50% faster',
       '+25% Spice production in the region',
     ],
+  },
+];
+
+// ──────────────────────────────────────────────
+// Sietch Traits
+// ──────────────────────────────────────────────
+
+export const sietchTraits: SietchTrait[] = [
+  {
+    id: 'arrakis-heart',
+    name: 'Arrakis Heart',
+    category: 'economic',
+    effects: ['+2% resource production per controlled Special Region'],
+  },
+  {
+    id: 'commercial-hub',
+    name: 'Commercial Hub',
+    category: 'economic',
+    effects: ['+10% Solari production'],
+  },
+  {
+    id: 'helping-hand',
+    name: 'Helping Hand',
+    category: 'economic',
+    effects: ['+10% Village production'],
+  },
+  {
+    id: 'tool-makers',
+    name: 'Tool Makers',
+    category: 'economic',
+    effects: ['−20% Building Upkeep'],
+  },
+  {
+    id: 'arrakis-harvesters',
+    name: 'Arrakis Harvesters',
+    category: 'military',
+    effects: ['+200% unit power as Solari when units die'],
+  },
+  {
+    id: 'heralds-of-revolution',
+    name: 'Heralds of Revolution',
+    category: 'military',
+    effects: ['+50% Militia Health'],
+  },
+  {
+    id: 'scouts-of-secret-paths',
+    name: 'Scouts of Secret Paths',
+    category: 'military',
+    effects: ['+10% Military Unit Health'],
+  },
+  {
+    id: 'training-grounds',
+    name: 'Training Grounds',
+    category: 'military',
+    effects: ['−30% recruitment time'],
+  },
+  {
+    id: 'arrakis-collectors',
+    name: 'Arrakis Collectors',
+    category: 'statecraft',
+    effects: ['+10 Solari per active Treaty'],
+  },
+  {
+    id: 'fremen-agents',
+    name: 'Fremen Agents',
+    category: 'statecraft',
+    effects: ['−20% spying cost and preparation time'],
+  },
+  {
+    id: 'fremen-brotherhood',
+    name: 'Fremen Brotherhood',
+    category: 'statecraft',
+    effects: ['+2 Agents with Fremen Sibling trait'],
+  },
+  {
+    id: 'fremen-scientists',
+    name: 'Fremen Scientists',
+    category: 'statecraft',
+    effects: ['+4 Knowledge'],
   },
 ];

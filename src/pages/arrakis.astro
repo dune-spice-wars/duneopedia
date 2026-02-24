@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import villagesBanner from "../assets/banners/villagesBanner.png";
 import Layout from "../layouts/Layout.astro";
-import { villageTraits, resources, specialRegions } from "../data/arrakis";
+import { villageTraits, resources, specialRegions, sietchTraits } from "../data/arrakis";
 ---
 
 <Layout
@@ -62,43 +62,50 @@ import { villageTraits, resources, specialRegions } from "../data/arrakis";
 		<h3 id="villageInfo">General Info</h3>
 		<ul>
 			<li>
-				+ There is always one village in each region (except for Deep Desert)
+				+ Villages are located in certain regions and can be attacked with military units
 			</li>
 			<li>
-				+ The villages closest to the main base will have less <a
+				+ Neutral villages further from your Main Base have stronger <a
 					class="link"
 					target="_blank"
 					href="units.html#militia">Militia</a
-				> than those further away
+				> defenses
 			</li>
 			<li>
-				+ The closer a village is to the Main Base, the less <a
-					class="link"
-					target="_blank"
-					href="#authority">Authority</a
-				> required to capture it
-			</li>
-			<li>
-				+ If the village is held by an enemy faction, you can instead choose to
-				Liberate the village, thus returning it to a neutral state
-			</li>
-			<li>
-				+ You may also choose to Pillage a village to receive various Resources
-				(mainly <a class="link" target="_blank" href="#solari">Solari</a>)
+				+ After defeating a village's militia, you can take one of three actions:
 			</li>
 			<ul>
 				<li>
-					− Pillaging a village will increase the <a
-						class="link"
-						target="_blank"
-						href="#authority">Authority</a
-					> cost to capture that village by 10% (stacks up to 5 times)
+					− <strong>Annex</strong>: spend <a class="link" target="_blank" href="#authority">Authority</a> to gain control of the village and its region
+				</li>
+				<li>
+					− <strong>Pillage</strong>: plunder it for Resources (mainly <a class="link" target="_blank" href="#solari">Solari</a>)
+				</li>
+				<li>
+					− <strong>Liberate</strong>: return the village to a neutral state (only available on enemy faction villages)
 				</li>
 			</ul>
+			<li>
+				+ Villages have construction slots that can be unlocked with <a class="link" target="_blank" href="#plascrete">Plascrete</a>:
+			</li>
+			<ul>
+				<li>− Standard factions: 5 slots (2 unlocked by default; additional slots cost 100, 200, and 400 Plascrete)</li>
+				<li>− House Corrino: 6 slots (3 unlocked by default)</li>
+				<li>− Fremen: 4 slots (2 unlocked by default; additional slots cost 100 and 200 Plascrete)</li>
+			</ul>
+			<li>
+				+ Each village has 2 random traits providing bonuses (see Village Traits below)
+			</li>
+			<ul>
+				<li>− Investment Office buildings will apply a village's traits an additional time</li>
+			</ul>
+			<li>
+				+ You may abandon a controlled village at any time (no refund is given)
+			</li>
 		</ul>
 
 		<h3 id="villageTraits">Village Traits</h3>
-		<p>Each village has 1 of the following traits:</p>
+		<p>Each village has 2 of the following traits:</p>
 
 		<div class="table-wrapper">
 			<table>
@@ -223,7 +230,33 @@ import { villageTraits, resources, specialRegions } from "../data/arrakis";
 		</ul>
 
 		<h3 id="sietchTraits">Sietch Traits</h3>
-		<p>**TO DO**</p>
+		<p>Each Sietch can be allied to gain one of the following traits:</p>
+
+		<div class="table-wrapper">
+			<table>
+				<thead>
+					<tr>
+						<th>Trait</th>
+						<th>Category</th>
+						<th>Effect(s)</th>
+					</tr>
+				</thead>
+				<tbody>
+					{sietchTraits.map((trait) => (
+						<tr>
+							<td>{trait.name}</td>
+							<td style="text-transform: capitalize">{trait.category}</td>
+							<td>
+								{trait.effects.length === 1
+									? trait.effects[0]
+									: trait.effects.map((e) => <li>{e}</li>)
+								}
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 
 		<!-- END MILITARY -->
 	</section>
