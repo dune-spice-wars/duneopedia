@@ -2,6 +2,32 @@
 import { Image } from "astro:assets";
 import gameplayBanner from "../assets/banners/gameplayBanner.png";
 import Layout from "../layouts/Layout.astro";
+import { operations, assassinationOperations } from "../data/gameplay";
+import type { FactionId, Cost } from "../data/types";
+
+const FACTION_NAMES: Record<FactionId, string> = {
+	atreides: 'Atreides',
+	harkonnen: 'Harkonnen',
+	smugglers: 'Smugglers',
+	fremen: 'Fremen',
+	corrino: 'Corrino',
+	ecaz: 'Ecaz',
+	vernius: 'Vernius',
+};
+
+function formatCost(cost: Cost): string {
+	const parts: string[] = [];
+	if (cost.intel !== undefined) parts.push(`${cost.intel.toLocaleString()} Intel`);
+	if (cost.solari !== undefined) parts.push(`${cost.solari.toLocaleString()} Solari`);
+	if (cost.spice !== undefined) parts.push(`${cost.spice.toLocaleString()} Spice`);
+	if (cost.water !== undefined) parts.push(`${cost.water.toLocaleString()} Water`);
+	if (cost.manpower !== undefined) parts.push(`${cost.manpower.toLocaleString()} Manpower`);
+	if (cost.authority !== undefined) parts.push(`${cost.authority.toLocaleString()} Authority`);
+	return parts.join(' | ');
+}
+
+const commonOps = operations.filter(op => op.faction === 'all');
+const factionOps = operations.filter(op => op.faction !== 'all');
 ---
 
 <Layout
@@ -18,11 +44,11 @@ import Layout from "../layouts/Layout.astro";
 		>
 
 		<blockquote>
-			“I must not fear. Fear is the mind-killer. Fear is the little-death that
+			"I must not fear. Fear is the mind-killer. Fear is the little-death that
 			brings total obliteration. I will face my fear. I will permit it to pass
 			over me and through me. And when it has gone past I will turn the inner
 			eye to see its path. Where the fear has gone there will be nothing. Only I
-			will remain.”
+			will remain."
 		</blockquote>
 
 		<!-- LIST OF CONTENTS -->
@@ -30,7 +56,9 @@ import Layout from "../layouts/Layout.astro";
 		<div id="contents" class="row">
 			<div class="col-6 col-12-medium">
 				<ul>
-					<a href="#victory"><li><strong>1.0 | Victory Conditions</strong></li></a>
+					<a href="#victory"
+						><li><strong>1.0 | Victory Conditions</strong></li></a
+					>
 					<ul>
 						<a href="#domination"><li>1.1 | Domination</li></a>
 						<a href="#hegemony"><li>1.2 | Hegemony</li></a>
@@ -42,9 +70,12 @@ import Layout from "../layouts/Layout.astro";
 						<a href="#agents"><li>2.1 | Agents</li></a>
 						<a href="#assignments"><li>2.2 | Assignments</li></a>
 						<a href="#operations"><li>2.3 | Operations</li></a>
-						<a href="#assassinations"><li>2.4 | Assassination Operations</li></a>
+						<a href="#assassinations"><li>2.4 | Assassination Operations</li></a
+						>
 					</ul>
-					<a href="#landsraad"><li><strong>3.0 | Landsraad Council</strong></li></a>
+					<a href="#landsraad"
+						><li><strong>3.0 | Landsraad Council</strong></li></a
+					>
 					<ul>
 						<a href="#resolutions"><li>3.1 | Resolutions</li></a>
 						<a href="#charters"><li>3.2 | Charters</li></a>
@@ -53,7 +84,9 @@ import Layout from "../layouts/Layout.astro";
 			</div>
 			<div class="col-6 col-12-medium">
 				<ul>
-					<a href="#specialEvents"><li><strong>4.0 | Special Events</strong></li></a>
+					<a href="#specialEvents"
+						><li><strong>4.0 | Special Events</strong></li></a
+					>
 					<ul>
 						<a href="#eventInfo"><li>4.1 | General Info</li></a>
 						<a href="#allEvents"><li>4.2 | Event List</li></a>
@@ -94,14 +127,26 @@ import Layout from "../layouts/Layout.astro";
 		<header id="header"></header>
 		<h2 id="espionage">Espionage</h2>
 		<h3 id="agents">Agents</h3>
-		<li>
-			Your first agent will only start recruiting once you have researched their
-			first Development
-		</li>
-		<p>
-			Captured agents can be traded back from the enemy faction, however they
-			also have a chance to escape every day
-		</p>
+		<ul>
+			<li>
+				Your first agent begins recruiting after capturing your first village
+				and takes 10 days by default; each subsequent agent recruits
+				progressively slower.
+			</li>
+			<li>
+				Default max is <strong>10 agents</strong>, upgradeable to <strong
+					>15</strong
+				> via the Spying Mastery development.
+			</li>
+			<li>
+				Captured agents can be traded back from the enemy faction, and also have
+				a chance to escape on their own each day.
+			</li>
+			<li>
+				Agent trait bonuses (recruitment speed, resource production, etc.) apply
+				regardless of where the agent is assigned.
+			</li>
+		</ul>
 
 		<p>
 			Each agent will have 1 special trait that modifies their abilities
@@ -117,77 +162,78 @@ import Layout from "../layouts/Layout.astro";
 				</thead>
 				<tbody>
 					<tr>
-						<td>Bene Gesserit</td>
-						<td>This agent produces 100% more Infiltration</td>
+						<td>Artist</td>
+						<td>+1 Hegemony production</td>
 					</tr>
 					<tr>
-						<td>Charistmatic</td>
+						<td>Bene Gesserit</td>
+						<td>Counts as 2 agents for Intelligence Levels</td>
+					</tr>
+					<tr>
+						<td>Brainwashed</td>
+						<td>−10% of every resource production</td>
+					</tr>
+					<tr>
+						<td>Charismatic</td>
 						<td
 							><a class="link" target="_blank" href="arrakis.html#influence"
 								>Influence</a
-							> global production is increased by 2% per Infiltration level</td
+							> global production is increased by 2% per Information level</td
 						>
 					</tr>
 					<tr>
 						<td>Council Agent</td>
-						<td>+100% Agent recruitment speed</td>
+						<td
+							>+100% Agent recruitment speed; cannot be captured; does not count
+							toward agent limit</td
+						>
 					</tr>
 					<tr>
 						<td>Engineer</td>
 						<td
-							><li>
-								<a class="link" target="_blank" href="arrakis.html#plascrete"
-									>Plascrete</a
-								> global production is increased by 1% per Infiltration level
-							</li></td
+							><a class="link" target="_blank" href="arrakis.html#plascrete"
+								>Plascrete</a
+							> global production is increased by 2% per Information level</td
+						>
+					</tr>
+					<tr>
+						<td>Fremen Sibling</td>
+						<td
+							>+5% <a class="link" target="_blank" href="arrakis.html#intel"
+								>Intel</a
+							> production; cannot be captured; does not count toward agent limit</td
 						>
 					</tr>
 					<tr>
 						<td>Ghost</td>
 						<td
-							>This agent produces 50% more <a
-								class="link"
-								target="_blank"
-								href="arrakis.html#intel">Intel</a
-							></td
+							>+50% <a class="link" target="_blank" href="arrakis.html#intel"
+								>Intel</a
+							> production</td
 						>
 					</tr>
 					<tr>
 						<td>Intendant</td>
-						<td
-							><li>
-								This agent produces 20% of every resource but Infiltration
-							</li></td
-						>
+						<td>+20% field resource production</td>
 					</tr>
 					<tr>
 						<td>Mentat</td>
-						<td>This agent produces 50% of every resource but Infiltration</td>
+						<td>+50% field resource production</td>
 					</tr>
 					<tr>
 						<td>Merchant</td>
 						<td
 							><a class="link" target="_blank" href="arrakis.html#solari"
 								>Solari</a
-							> global production is increased by 1% per Infiltration level</td
-						>
-					</tr>
-					<tr>
-						<td>Political Mastermind</td>
-						<td
-							>+5% <a class="link" target="_blank" href="arrakis.html#influence"
-								>Influence</a
-							> production</td
+							> global production is increased by 0.5% per Information level</td
 						>
 					</tr>
 					<tr>
 						<td>Psychologist</td>
 						<td
-							>This agent produces 20% more <a
-								class="link"
-								target="_blank"
-								href="arrakis.html#intel">Intel</a
-							></td
+							>+20% <a class="link" target="_blank" href="arrakis.html#intel"
+								>Intel</a
+							> production</td
 						>
 					</tr>
 					<tr>
@@ -199,7 +245,7 @@ import Layout from "../layouts/Layout.astro";
 						<td
 							><a class="link" target="_blank" href="arrakis.html#knowledge"
 								>Knowledge</a
-							> global production is increased by 2% per Infiltration level</td
+							> global production is increased by 5% per Information level</td
 						>
 					</tr>
 				</tbody>
@@ -207,6 +253,10 @@ import Layout from "../layouts/Layout.astro";
 		</div>
 
 		<h3 id="assignments">Assignments</h3>
+		<p>
+			Up to <strong>3 agents</strong> can be assigned per spying field (Harkonnen
+			faction gets +1 slot).
+		</p>
 		<p>
 			Agents can be assigned to one of the following assignments to grant you
 			benefits according to the below table:
@@ -222,90 +272,28 @@ import Layout from "../layouts/Layout.astro";
 				<tbody>
 					<tr>
 						<td>Enemy Faction</td>
-						<td
-							><li>
-								+5 <a class="link" target="_blank" href="arrakis.html#intel"
-									>Intel</a
-								>
-							</li>
-							<li>+10 Faction Infiltration</li></td
-						>
+						<td>+3 <a class="link" target="_blank" href="arrakis.html#intel">Intel</a></td>
 					</tr>
 					<tr>
 						<td>Arrakis</td>
-						<td
-							><li>
-								+1 <a class="link" target="_blank" href="arrakis.html#authority"
-									>Authority</a
-								>
-							</li>
-							<li>
-								+1 <a class="link" target="_blank" href="arrakis.html#intel"
-									>Intel</a
-								>
-							</li>
-							<li>+10 Arrakis Infiltration</li>
-							<li>
-								+30% <a
-									class="link"
-									target="_blank"
-									href="arrakis.html#sietches">Sietch</a
-								> detection speed
-							</li></td
-						>
+						<td>+1 <a class="link" target="_blank" href="arrakis.html#authority">Authority</a></td>
 					</tr>
 					<tr>
 						<td>Spacing Guild</td>
-						<td
-							><li>
-								+2 <a class="link" target="_blank" href="arrakis.html#manpower"
-									>Manpower</a
-								>
-							</li>
-							<li>
-								+1 <a class="link" target="_blank" href="arrakis.html#intel"
-									>Intel</a
-								>
-							</li>
-							<li>+10 Spacing Guild Infiltration</li></td
-						>
+						<td>+1 <a class="link" target="_blank" href="arrakis.html#manpower">Manpower</a></td>
 					</tr>
 					<tr>
 						<td>CHOAM</td>
-						<td
-							><li>
-								+10 <a class="link" target="_blank" href="arrakis.html#solari"
-									>Solari</a
-								>
-							</li>
-							<li>
-								+1 <a class="link" target="_blank" href="arrakis.html#intel"
-									>Intel</a
-								>
-							</li>
-							<li>+10 CHOAM Infiltration</li></td
-						>
+						<td>+10 <a class="link" target="_blank" href="arrakis.html#solari">Solari</a></td>
 					</tr>
 					<tr>
 						<td>Landsraad</td>
-						<td
-							><li>
-								+1 <a class="link" target="_blank" href="arrakis.html#influence"
-									>Influence</a
-								>
-							</li>
-							<li>
-								+1 <a class="link" target="_blank" href="arrakis.html#intel"
-									>Intel</a
-								>
-							</li>
-							<li>+10 Landsraad Infiltration</li></td
-						>
+						<td>+1 <a class="link" target="_blank" href="arrakis.html#influence">Influence</a></td>
 					</tr>
 					<tr>
 						<td>Counterintelligence</td>
-						<td
-							><li>
+						<td>
+							<li>
 								+1% daily chance to capture an enemy agent assigned on your
 								faction
 							</li>
@@ -313,15 +301,41 @@ import Layout from "../layouts/Layout.astro";
 							<li>
 								10% chance to capture an agent when an operation against you has
 								been detected
-							</li></td
-						>
+							</li>
+							<li>Slows assassination preparation against you</li>
+							<li>Does not generate any resources</li>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
+		<h4 id="intel-levels">Intelligence Levels</h4>
+		<p>
+			Assigning agents to a faction's spying field raises your Intelligence
+			Level with that faction, unlocking progressively more information and
+			capabilities:
+		</p>
+		<ul>
+			<li>
+				<strong>Level 1</strong> — Reveals borders, village productions, councilors,
+				and development counts; unlocks the Infiltration Cells operation.
+			</li>
+			<li>
+				<strong>Level 2</strong> — Reveals main base buildings, command points, units,
+				agent assignments, available operations, and Underworld HQ presence.
+			</li>
+			<li><strong>Level 3</strong> — Unlocks the Assassination operation.</li>
+		</ul>
+
 		<h3 id="operations">Operations</h3>
 		<p>Operations are missions that can be launched by your Spies.</p>
+		<p>
+			Operations take <strong>3 days</strong> to prepare before deploying. Launching
+			an operation exposes agents assigned to its prerequisite fields to capture risk
+			— temporarily reassigning those agents before launching (and reassigning them
+			back after) mitigates this risk.
+		</p>
 		<p>
 			Each operation has a difficulty level that determines several factors
 			according to the table below:
@@ -396,530 +410,47 @@ import Layout from "../layouts/Layout.astro";
 			</table>
 		</div>
 
-		<h3><strong>List of Operations:</strong></h3>
-		<h4>Probe Setup</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 50 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | <strong>Difficulty</strong>: Easy
-			</li>
-			<li><strong>Infiltration Levels Required</strong>: N/A</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
+		<h3 id="operations-list"><strong>List of Operations</strong></h3>
+
+		<h4>Common Operations (All Factions)</h4>
+		{commonOps.map(op => (
+			<h5 id={op.id}>{op.name}</h5>
 			<ul>
-				<li>+ Reveals all information and units in the region</li>
-				<li>
-					+ Advances detection of any <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#sietches">Sietch</a
-					> in the region
-				</li>
+				<li><strong>Cost</strong>: {formatCost(op.cost)} | <strong>Difficulty</strong>: {op.difficulty}</li>
+				<li><strong>Information Levels Required</strong>: {op.infoLevelsRequired.length === 0 ? 'None' : op.infoLevelsRequired.join(' | ')}</li>
+				<li><strong>Factions</strong>: All</li>
 			</ul>
-		</p>
-
-		<h4>Gear Sabotage</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 100 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | <strong>Difficulty</strong>: Easy
-			</li>
-			<li><strong>Infiltration Levels Required</strong>: Spacing Guild 1</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
 			<ul>
-				<li>+ Reduces enemy units Power and Speed in the Region</li>
-				<li>
-					+ -20% <a class="link" target="_blank" href="buildings.html#missile"
-						>Missile Battery</a
-					> Power
-				</li>
+				{op.effects.map(effect => <li>{effect}</li>)}
 			</ul>
-		</p>
+		))}
 
-		<h4>Supply Drop</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 100 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | <strong>Difficulty</strong>: Easy
-			</li>
-			<li><strong>Infiltration Levels Required</strong>: Arrakis 1</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
+		<h4>Faction-Specific Operations</h4>
+		{factionOps.map(op => (
+			<h5 id={op.id}>{op.name} (<a class="link" target="_blank" href={`${op.faction}.html`}>{FACTION_NAMES[op.faction as FactionId]}</a>)</h5>
 			<ul>
-				<li>
-					+ Gives supply and health regeneration to allied units in the Region
-				</li>
+				<li><strong>Cost</strong>: {formatCost(op.cost)} | <strong>Difficulty</strong>: {op.difficulty}</li>
+				<li><strong>Information Levels Required</strong>: {op.infoLevelsRequired.length === 0 ? 'None' : op.infoLevelsRequired.join(' | ')}</li>
 			</ul>
-		</p>
-
-		<h4>Scavenger Team</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 100 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 100 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Easy
-			</li>
-			<li><strong>Infiltration Levels Required</strong>: Arrakis 1</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
 			<ul>
-				<li>
-					+ Converts 100% of the Power of dying Military Units in to <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#solari">Solaris</a
-					>
-				</li>
-				<li>
-					+ Allies gain 20% more resources when pillaging a <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#villages">Village</a
-					>
-				</li>
+				{op.effects.map(effect => <li>{effect}</li>)}
 			</ul>
-		</p>
-
-		<h4>Consolidation</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 100 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 100 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Easy
-			</li>
-			<li><strong>Infiltration Levels Required</strong>: Spacing Guild 1</li>
-			<li><strong>Factions</strong>: Corrino</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ +3 Armor to units and structures in the region</li>
-			</ul>
-		</p>
-
-		<h4>Arrakis Diplomacy</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 150 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Medium
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: CHOAM 1 | Landsraad 1
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="atreides.html">Atreides</a
-				>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ Disbands the Fremen Raids and increases relations with the <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#sietches">Sietches</a
-					> in the region
-				</li>
-			</ul>
-		</p>
-
-		<h4>Combat Drugs</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 150 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Medium
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
-				1
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="harkonnen.html">Harkonnen</a
-				>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ Their Power and Speed are increased during the effect</li>
-				<li>− Allied units in combat lose health and supply each second</li>
-			</ul>
-		</p>
-
-		<h4>Poison the Reserves</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 150 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Medium
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
-				1
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="smugglers.html">Smugglers</a
-				>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ Increases the Supply drain and prevents Supply regeneration for
-					opponents
-				</li>
-			</ul>
-		</p>
-
-		<h4>Sand Cloak</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 150 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Medium
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
-				1
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="fremen.html">Fremen</a
-				>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ Allied military units are invisible for 2 days</li>
-			</ul>
-		</p>
-
-		<h4>Interdiction Zone</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 200 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 200 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Medium
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Spacing Guild 1 |
-				Landsraad 1
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="fremen.html">Corrino</a
-				>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ The use of Carryalls is forbidden and Blocks the Shuttle ability for
-					enemies
-				</li>
-			</ul>
-		</p>
-
-		<h4>Cease Fire</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 500 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Hard
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: CHOAM 2 | Landsraad 2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ Interrupts and prevents battles in target Region for 2 days</li>
-			</ul>
-		</p>
-
-		<h4>Crowd Manipulation</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 500 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Hard
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Spacing Guild 2 |
-				Landsraad 2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ The selected <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#villages">Village</a
-					> starts a rebellion
-				</li>
-			</ul>
-		</p>
-
-		<h4>Defense Sabotage</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 500 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Hard
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Arrakis 2 | Spacing Guild
-				2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ -50% Power for the target Main Base</li>
-				<li>+ +50% damage received by the target Main Base</li>
-			</ul>
-		</p>
-
-		<h4>Atomics</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 600 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 6,000 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Epic
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Arrakis 2 | Spacing Guild
-				2 | CHOAM | 2 | Landsraad 2
-			</li>
-			<li>
-				<strong>Factions</strong>: <a
-					class="link"
-					target="_blank"
-					href="atreides.html">Atreides</a
-				> | <a class="link" target="_blank" href="harkonnen.html">Harkonnen</a> |
-				<a class="link" target="_blank" href="smugglers.html">Smugglers</a>
-			</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ Fires your Atomics in the selected region, damaging all units and
-					devastating <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#villages">Villages</a
-					>
-				</li>
-				<li>
-					− Reduces <a
-						class="link"
-						target="_blank"
-						href="arrakis.html#landsraad">Landsraad Standing</a
-					> by 300
-				</li>
-			</ul>
-		</p>
-
-		<!-- <h4>CHOAM Shares</h4> 
-									<ul>
-										<li><strong>Cost</strong>: 50 <a class="link" target="_blank" href="arrakis.html#intel">Intel</a> | 10,000 <a class="link" target="_blank" href="arrakis.html#solari">Solari</a> | <strong>Difficulty</strong>: Special</li>
-										<li><strong>Infiltration Levels Required</strong>: CHOAM 2</li>
-										<li><strong>Factions</strong>: All</li>
-									</ul>
-									<p><ul>
-										<li>+ Buy CHOAM shares to increase your Hegemony by 500</li>
-									</ul></p> -->
-
-		<!-- <h4>Political Audit</h4> 
-									<ul>
-										<li><strong>Cost</strong>: 50 <a class="link" target="_blank" href="arrakis.html#intel">Intel</a> | 300 <a class="link" target="_blank" href="arrakis.html#influence">Influence</a> | <strong>Difficulty</strong>: Special</li>
-										<li><strong>Infiltration Levels Required</strong>: Landsraad 2</li>
-										<li><strong>Factions</strong>: <a class="link" target="_blank" href="atreides.html">Atreides</a> | <a class="link" target="_blank" href="harkonnen.html">Harkonnen</a> | <a class="link" target="_blank" href="smugglers.html">Smugglers</a></li>
-									</ul>
-									<p><ul>
-										<li>+ Grants 30 <a class="link" target="_blank" href="arrakis.html#landsraad">Landsraad Standing</a></li>
-									</ul></p> -->
+		))}
 
 		<h3 id="assassinations">Assassination Operations</h3>
-		<h4>Protocol Surveys</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 200 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 200 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Assassination 1/4
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Target Faction 1 |
-				Arrakis 1 | Spacing Guild 1 | CHOAM 1 | Landsraad 1
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
+		<p>Assassination operations are a special chain of missions leading to the elimination of a rival faction leader. They can be run concurrently with other operations.</p>
+		{assassinationOperations.map(op => (
+			<h5 id={op.id}>{op.name}</h5>
 			<ul>
-				<li>+ Gain access to 1 more slot in the target Faction Infiltration</li>
-				<li>
-					+ Sets up the assassination of the target faction leader. Can be
-					launched at the same time as other missions
-				</li>
+				<li><strong>Cost</strong>: {formatCost(op.cost)} | <strong>Difficulty</strong>: {op.difficulty}</li>
+				<li><strong>Information Levels Required</strong>: {op.infoLevelsRequired.length === 0 ? 'None' : op.infoLevelsRequired.join(' | ')}</li>
+				<li><strong>Factions</strong>: All</li>
 			</ul>
-		</p>
+			<ul>
+				{op.effects.map(effect => <li>{effect}</li>)}
+			</ul>
+		))}
 
-		<h4>Infiltration Cells</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 500 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 1,000 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Assassination 2/4
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Target Faction 2 |
-				Arrakis 2 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>+ Gain access to 1 more slot in the target Faction Infiltration</li>
-				<li>
-					+ Sets up the assassination of the target faction leader. Can be
-					launched at the same time as other missions
-				</li>
-			</ul>
-		</p>
-
-		<h4>Proximity Infiltration</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 500 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 1,000 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Assassination 3/4
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Target Faction 2 |
-				Arrakis 2 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ Allows for the assassination of the target faction leader. Can be
-					launched at the same time as other missions
-				</li>
-			</ul>
-		</p>
-
-		<h4>Assassination</h4>
-		<ul>
-			<li>
-				<strong>Cost</strong>: 1000 <a
-					class="link"
-					target="_blank"
-					href="arrakis.html#intel">Intel</a
-				> | 5,000 <a class="link" target="_blank" href="arrakis.html#solari"
-					>Solari</a
-				> | <strong>Difficulty</strong>: Assassination 4/4
-			</li>
-			<li>
-				<strong>Infiltration Levels Required</strong>: Target Faction 3 |
-				Arrakis 3 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
-			</li>
-			<li><strong>Factions</strong>: All</li>
-		</ul>
-		<p>
-			<ul>
-				<li>
-					+ Assassinate the leader of the target faction. The player will be
-					removed from the game
-				</li>
-			</ul>
-		</p>
 		<!-- END ESPIONAGE -->
 
 		<!-- LANDSRAAD COUNCIL -->

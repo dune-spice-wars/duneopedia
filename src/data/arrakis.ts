@@ -148,10 +148,13 @@ export const resources: Resource[] = [
     id: 'spice',
     name: 'Spice',
     info: [
-      '+ The most valuable resource in the game - used to both generate Solari at a variable exchange rate and pay the Imperial Spice Tax',
-      '+ Spice Fields with harvesters on them will generate Spice, but will also be attacked by Sandworms intermittedly',
-      '+ If set to Auto-Recall, harvesters will generate -5% Spice but will attempt to automatically recall itself to the village when attacked by a Sandworm. Note that sometimes it will still be destroyed even on Auto-Recall.',
+      '+ The most valuable resource in the game — used to both generate Solari at a variable exchange rate and pay the Imperial Spice Tax',
+      '+ Spice Fields with harvesters on them will generate Spice, but will also be attacked by Sandworms intermittently',
+      '+ If set to Auto-Recall, harvesters will generate -5% Spice but will attempt to automatically recall themselves to the village when attacked by a Sandworm. Note that sometimes the Harvester will still be destroyed even on Auto-Recall.',
       '+ Can be traded with other factions',
+      '+ Converts to Solari at a rate of 1.5–2.5 Solari per Spice; the rate recalculates after each Spice Tax cycle',
+      '+ The Spice Tax is due every 25 days; missing a payment costs −20 Landsraad Standing',
+      '− No more than 3,000 Spice can be stockpiled at any given time (6,000 with the CHOAM Branch Main Base building)',
     ],
   },
   {
@@ -164,9 +167,9 @@ export const resources: Resource[] = [
       '+ Can be traded with other factions',
     ],
     deficitEffects: [
-      '-50% Knowledge',
-      '-100% Agent recruitment speed',
-      '-5 Landsraad Standing',
+      '−50% Knowledge',
+      '−100% Agent recruitment speed',
+      '−5 Landsraad Standing',
     ],
   },
   {
@@ -175,13 +178,13 @@ export const resources: Resource[] = [
     info: [
       '+ Plascrete is required to build and maintain all Buildings within Villages and Main Bases.',
       '+ Primarily gained from Plascrete Factories',
-      '+ By default, your Main Base generates +20 Plascrete',
+      '+ By default, your Main Base generates +30 Plascrete',
       '+ Can be traded with other factions',
       '− No more than 5000 Plascrete can be stockpiled at any given time',
     ],
     deficitEffects: [
       '+50% Buildings Solari Upkeep',
-      '-50% Buildings construction speed',
+      '−50% Buildings construction speed',
     ],
   },
   {
@@ -190,11 +193,11 @@ export const resources: Resource[] = [
     info: [
       '+ Manpower is required to recruit and maintain Units',
       '+ Primarily gained from Recruitment Offices and Agents assigned to Spacing Guild Infiltration',
-      '+ By default, your Main Base generates +10 Manpower',
+      '+ By default, your Main Base generates +4 Manpower',
       '− No more than 500 Manpower can be stockpiled at any given time',
     ],
     deficitEffects: [
-      '-100% health regeneration on Units',
+      '−100% health regeneration on Units',
     ],
   },
   {
@@ -204,6 +207,7 @@ export const resources: Resource[] = [
       '+ Fuel Cells are the main power source used on Arrakis. They are used to operate vehicles such as Harvesters and Drones, as well as some Buildings',
       '+ Primarily gained by building Fuel Cell Factories',
       '+ By default, your Main Base generates +10 Fuel Cells',
+      '− Fremen cannot obtain Fuel Cells; their major buildings consume additional Water instead',
     ],
   },
   {
@@ -211,11 +215,14 @@ export const resources: Resource[] = [
     name: 'Water',
     info: [
       '+ Water is essential for life, and a rare resource on Arrakis. It is mainly used to supply controlled Villages as well as recruit and maintain Units',
-      '+ Primarily gained by building Wind Traps',
+      '+ Primarily gained by building Dew Collectors (all factions) or Wind Traps (Fremen only)',
+      '+ By default, your Main Base generates +20 Water',
+      '+ Village buildings consume 2 Water; major buildings consume 3 Water (10 Water for Fremen)',
+      '+ Increases the maximum Supply range of non-mechanical units',
     ],
     deficitEffects: [
       '+50% Supply drain',
-      '-50% Manpower production',
+      '−50% Manpower production',
       'Unrest and Rebellion may take place in your Villages',
     ],
   },
@@ -268,65 +275,60 @@ export const resources: Resource[] = [
     id: 'hegemony',
     name: 'Hegemony',
     info: [
-      "+ Hegemony is the reflection of a Faction's overall power over Dune. Some thresholds will unlock new abilities and ultimate allow you to win the game!",
-      '+ A high Landsraad Standing will grant your Faction several buffs while a low Landsraad Standing can have severe penalties',
-      '+ The exact Landsraad Standing effects can be seen below:',
+      "+ Hegemony is the reflection of a Faction's overall power over Dune. Thresholds unlock new abilities and ultimately allow you to win the game",
+      '+ 2,500 Hegemony: Unlocks Headquarter Buildings',
+      '+ 5,000 Hegemony: Unlocks faction elite ground units, air units, and major buildings',
+      '+ 10,000 Hegemony: Unlocks Hero unit',
+      '+ 30,000 Hegemony: Victory',
+      '+ Primarily gained from controlling Villages (+600 per village on medium map, +1,000 on small map), controlling Special Regions (+1,000 each), paying the Spice Tax (+1,000 per payment), and completing Events (+300 each)',
     ],
   },
   {
     id: 'landsraad',
     name: 'Landsraad Standing',
     info: [
-      "+ Landsraad Standing represents your Faction's current political power",
-      '+ A high Landsraad Standing will grant your Faction several buffs while a low Landsraad Standing can have severe penalties',
-      '+ The exact Landsraad Standing effects can be seen below:',
+      "+ Landsraad Standing represents your Faction's current political power and standing within the Landsraad",
+      '+ Starting values: Corrino 250, Ecaz 220, Vernius 220, Atreides 210, Harkonnen 200; Smugglers enter the Landsraad at 5,000 Hegemony with 200 Standing; Fremen never obtain Landsraad Standing',
+      '+ Can be gained from Discoveries, supporting Council Resolutions favored by House Minors, active Truces, and building an Embassy in your Main Base',
+      '+ Can be lost from: missing a Spice Tax payment (−20), betraying a Truce (−100), using Nuclear Warheads (−500), recruiting a Hero Ghola (−30)',
+      '+ Dropping below 250 Standing risks losing your Charters',
+      '+ The Landsraad Standing tier effects are shown below:',
     ],
     landsraadTiers: [
       {
-        range: '0-49',
+        range: '0-99 (Pariah)',
         effects: [
-          '-50% CHOAM Spice exchange rate',
-          '100% Votes',
-          '-5 Influence',
-          'Targeted by Landsraad Guard every 10 days',
+          'No voting rights',
+          '−3 Influence production',
+          '+300% CHOAM share buying cost',
+          'Main Base attacked by Landsraad Guard every 20 days',
         ],
       },
       {
-        range: '50-99',
+        range: '100-199 (Low)',
         effects: [
-          '-25% CHOAM Spice exchange rate',
-          '-50 Votes',
-          '-5 Influence',
+          '−2 Influence production',
+          '+100% CHOAM share buying cost',
         ],
       },
       {
-        range: '100-199',
+        range: '200-299 (Medium)',
+        effects: ['No special effects'],
+      },
+      {
+        range: '300-399 (High)',
         effects: [
-          '-20% CHOAM Spice exchange rate',
-          '-20 Votes',
-          '-2 Influence',
+          '+100 max Influence',
+          '+1 Influence production',
+          '−10% CHOAM share buying cost',
         ],
       },
       {
-        range: '200-299',
-        effects: ['+200 Hegemony'],
-      },
-      {
-        range: '300-399',
+        range: '400-500 (Very High)',
         effects: [
-          '+10% CHOAM Spice exchange rate',
-          '+20 Votes',
-          '+2 Influence',
-          '+600-800 Hegemony',
-        ],
-      },
-      {
-        range: '400-500',
-        effects: [
-          '+20% CHOAM Spice exchange rate',
-          '+30 Votes',
-          '+3 Influence',
-          '+1400 Hegemony',
+          '+200 max Influence',
+          '+2 Influence production',
+          '−15% CHOAM share buying cost',
         ],
       },
     ],

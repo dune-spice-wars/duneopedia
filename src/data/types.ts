@@ -199,6 +199,23 @@ export interface SietchTrait {
 }
 
 // ──────────────────────────────────────────────
+// Espionage – Operations
+// ──────────────────────────────────────────────
+
+export type OperationDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Epic' | 'Special' | 'N/A';
+
+export interface Operation {
+  id: string;
+  name: string;
+  cost: Cost;
+  difficulty: OperationDifficulty;
+  /** Each entry is one requirement string, e.g. 'Arrakis 1'. Empty means none. */
+  infoLevelsRequired: string[];
+  faction: FactionId | 'all';
+  effects: string[];
+}
+
+// ──────────────────────────────────────────────
 // Community patch delta types
 // ──────────────────────────────────────────────
 
