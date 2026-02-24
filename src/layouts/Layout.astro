@@ -1,0 +1,157 @@
+---
+import FactionLinks from "../components/FactionLinks.astro";
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>{title}</title>
+		<meta charset="utf-8" />
+		<meta name="description" content={description} />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+		<meta http-equiv="content-language" content="en-us" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link
+			rel="shortcut icon"
+			type="image/x-icon"
+			href="/images/site/favicon.ico"
+		/>
+		<style is:global>
+			/* Astro <Image> adds explicit height attributes; prevent stretching when CSS sets width:100% */
+			img { height: auto; }
+		</style>
+		<style>
+			.mobileShow {
+				display: none;
+			}
+			@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+				.mobileShow {
+					display: inline;
+				}
+			}
+		</style>
+
+		<style>
+			.mobileHide {
+				display: inline;
+			}
+			@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+				.mobileHide {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+		<div id="wrapper">
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+					<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo"
+							><strong>Dune: Spice Wars</strong></a
+						>
+					</header>
+
+					<!-- Page content -->
+					<slot />
+
+					<!-- Faction links footer -->
+					<header id="header"></header>
+					<h2>Factions</h2>
+					<FactionLinks />
+				</div>
+			</div>
+
+			<!-- Sidebar -->
+			<div id="sidebar">
+				<div class="inner">
+					<!-- Menu -->
+					<nav id="menu">
+						<header class="major">
+							<h1><a href="index.html">Home</a></h1>
+						</header>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li>
+								<span class="opener">Factions</span>
+								<ul>
+									<li><a href="atreides.html">House Atreides</a></li>
+									<li><a href="harkonnen.html">House Harkonnen</a></li>
+									<li><a href="smugglers.html">Smugglers</a></li>
+									<li><a href="fremen.html">Fremen</a></li>
+									<li><a href="corrino.html">House Corrino</a></li>
+									<li><a href="ecaz.html">House Ecaz</a></li>
+									<li><a href="vernius.html">House Vernius</a></li>
+								</ul>
+							</li>
+							<li><a href="buildings.html">Buildings</a></li>
+							<li><a href="units.html">Units</a></li>
+							<li><a href="developments.html">Developments</a></li>
+							<li><a href="councilors.html">Councilors</a></li>
+							<li>
+								<span class="opener">Arrakis</span>
+								<ul>
+									<li><a href="arrakis.html#villages">Villages</a></li>
+									<li><a href="arrakis.html#resources">Resources</a></li>
+									<li>
+										<a href="arrakis.html#specialRegions">Special Regions</a>
+									</li>
+									<li><a href="arrakis.html#sietches">Sietches</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">Gameplay</span>
+								<ul>
+									<li>
+										<a href="gameplay.html#victory">Victory Conditions</a>
+									</li>
+									<li><a href="gameplay.html#espionage">Espionage</a></li>
+									<li>
+										<a href="gameplay.html#landsraad">Landsraad Council</a>
+									</li>
+									<li>
+										<a href="gameplay.html#specialEvents">Special Events</a>
+									</li>
+									<li><a href="gameplay.html#POI">Points of Interest</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Back to Top</a></li>
+						</ul>
+					</nav>
+
+					<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">
+							&copy; Duneopedia. Design: <a href="https://html5up.net"
+								>HTML5 UP</a
+							>.
+						</p>
+					</footer>
+				</div>
+			</div>
+		</div>
+
+		<!-- Scripts -->
+		<script is:inline src="/assets/js/browser.min.js"></script>
+		<script is:inline src="/assets/js/breakpoints.min.js"></script>
+		<script is:inline src="/assets/js/main.js"></script>
+	</body>
+</html>

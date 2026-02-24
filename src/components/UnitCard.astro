@@ -1,0 +1,66 @@
+---
+import type { Unit } from '../data/types';
+import { developments } from '../data/developments';
+import { buildings } from '../data/buildings';
+import CostDisplay from './CostDisplay.astro';
+
+interface Props {
+  unit: Unit;
+}
+
+const { unit } = Astro.props;
+
+const dev = unit.developmentRequired
+  ? developments.find(d => d.id === unit.developmentRequired)
+  : null;
+
+const building = unit.buildingRequired
+  ? buildings.find(b => b.id === unit.buildingRequired)
+  : null;
+
+const { health, power, armor, supply } = unit.stats;
+---
+
+<h3 id={unit.id}>
+  {unit.image && (
+    <img src={unit.image} style="height:48px;vertical-align:middle;margin-right:8px;" alt={`${unit.name} icon`} />
+  )}
+  {unit.name}
+</h3>
+<ul>
+  <li>
+    <strong>Health</strong>: {health ?? 'N/A'} |
+    <strong>Power</strong>: {power ?? 'N/A'} |
+    <strong>Armor</strong>: {armor ?? 'N/A'} |
+    <strong>Supply</strong>: {supply ?? 'N/A'}
+  </li>
+  <li>
+    <strong>Recruitment Cost</strong>: <CostDisplay cost={unit.recruitmentCost} />
+  </li>
+  {unit.recruitmentTimeDays && (
+    <li><strong>Recruitment Time</strong>: {unit.recruitmentTimeDays} Days</li>
+  )}
+  <li>
+    <strong>Upkeep</strong>: <CostDisplay cost={unit.upkeep} />
+  </li>
+  <li>
+    <strong>Development required</strong>:{' '}
+    {dev
+      ? <a class="link" target="_blank" href={`/developments#${dev.id}`}>{dev.name}</a>
+      : 'None'}
+  </li>
+  {building && (
+    <li>
+      <strong>Building required</strong>:{' '}
+      <a class="link" target="_blank" href={`/buildings#${building.id}`}>{building.name}</a>
+    </li>
+  )}
+  {unit.prerequisite && (
+    <li><strong>Prerequisites</strong>: {unit.prerequisite}</li>
+  )}
+  <li><strong>Range</strong>: {unit.range}</li>
+  <li><strong>Abilities:</strong></li>
+  {unit.abilities.map(ability => <li>{ability}</li>)}
+</ul>
+
+<blockquote>{unit.flavorText}</blockquote>

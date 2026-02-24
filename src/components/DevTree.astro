@@ -1,0 +1,330 @@
+---
+import type { Development } from "../data/types";
+
+interface Props {
+  items: Development[];
+  color: string;
+  treeId: string; // e.g. 'statecraft' — used to give the SVG arrow marker a unique id
+  linkBase?: string; // prefix for node hrefs, e.g. '/developments'. Defaults to '' (in-page)
+  idPrefix?: string; // prefix for anchor ids, e.g. 'atreides-'. Defaults to '' (no prefix)
+}
+
+const { items, color, treeId, linkBase = '', idPrefix = '' } = Astro.props;
+
+// ── Build-time grid layout ──────────────────────────────────────────────────
+// Strategy: each leaf node = 1 column. A parent spans its subtree's total
+// leaf count, centred over its children via justify-self:center on a fixed-
+// width card. This mirrors the in-game tree layout exactly.
+
+const CARD_W = 180; // px — fixed card width
+const COL_GAP = 16; // px — gap between grid columns
+
+const itemIds = new Set(items.map((d) => d.id));
+
+// Children map — only within this tree
+const childrenMap = new Map<string, string[]>();
+for (const dev of items) {
+  if (dev.prereqId && itemIds.has(dev.prereqId)) {
+    if (!childrenMap.has(dev.prereqId)) childrenMap.set(dev.prereqId, []);
+    childrenMap.get(dev.prereqId)!.push(dev.id);
+  }
+}
+
+// Root = node with no in-tree parent (prereqId absent or points outside tree)
+const root = items.find((d) => !d.prereqId || !itemIds.has(d.prereqId));
+
+function leafCount(id: string): number {
+  const kids = childrenMap.get(id) ?? [];
+  if (kids.length === 0) return 1;
+  return kids.reduce((sum, kid) => sum + leafCount(kid), 0);
+}
+
+interface GridPos {
+  colStart: number;
+  colEnd: number;
+  row: number;
+}
+const gridPos = new Map<string, GridPos>();
+
+function assignGridPos(id: string, colStart: number, row: number): void {
+  const lc = leafCount(id);
+  gridPos.set(id, { colStart, colEnd: colStart + lc, row });
+  let col = colStart;
+  for (const kid of childrenMap.get(id) ?? []) {
+    assignGridPos(kid, col, row + 1);
+    col += leafCount(kid);
+  }
+}
+
+if (root) assignGridPos(root.id, 1, 1);
+const totalCols = root ? leafCount(root.id) : 1;
+---
+
+<div
+  class="dev-tree"
+  data-tree-id={treeId}
+  style={`--tree-color: ${color}; --total-cols: ${totalCols}; --col-w: ${CARD_W}px; --col-gap: ${COL_GAP}px`}
+>
+  <!-- SVG overlay — bezier connectors drawn by script below -->
+  <svg class="tree-svg" aria-hidden="true"></svg>
+
+  {
+    items.map((dev) => {
+      const pos = gridPos.get(dev.id);
+      if (!pos) return null;
+      const prereqInTree = !!(dev.prereqId && itemIds.has(dev.prereqId));
+      return (
+        <article
+          class={`tree-node${dev.faction ? " tree-node--unique" : ""}`}
+          data-dev-id={dev.id}
+          data-prereq={prereqInTree ? (dev.prereqId ?? "") : ""}
+          style={`grid-column: ${pos.colStart} / ${pos.colEnd}; grid-row: ${pos.row};`}
+        >
+          <h3 class="node-name">
+            {dev.image && (
+              <img
+                src={dev.image}
+                style="height:36px;vertical-align:middle;margin-right:6px;"
+                alt={`${dev.name} icon`}
+              />
+            )}
+            <a href={`${linkBase}#${idPrefix}${dev.id}`} class="node-link">
+              {dev.faction ? dev.name + '\u00A0★' : dev.name}
+            </a>
+          </h3>
+          <div class="node-tooltip" role="tooltip">
+            <p class="tooltip-name">{dev.name}{dev.faction ? '\u00A0★' : ''}</p>
+            <ul class="tooltip-effects">
+              {dev.effects.map((e) => <li>{e}</li>)}
+            </ul>
+          </div>
+        </article>
+      );
+    })
+  }
+</div>
+
+<style>
+  .dev-tree {
+    display: grid;
+    grid-template-columns: repeat(var(--total-cols), var(--col-w, 180px));
+    column-gap: var(--col-gap, 16px);
+    row-gap: 2.5rem;
+    justify-content: center;
+    position: relative;
+    padding: 0.5rem 0 1.5rem;
+  }
+
+  /* Covers the whole tree so SVG paths can span across rows */
+  .tree-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 0;
+  }
+
+  .tree-node--unique {
+    background: color-mix(in srgb, var(--tree-color) 18%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tree-color) 60%, transparent);
+  }
+
+  .tree-node {
+    /* Fixed width; justify-self:center places it in the middle of its spanning columns */
+    box-sizing: border-box;
+    width: var(--col-w, 180px);
+    justify-self: center;
+    align-self: start;
+    padding: 0.75rem 0.875rem;
+    border-top: 3px solid var(--tree-color);
+    border-left: 1px solid
+      color-mix(in srgb, var(--tree-color) 25%, transparent);
+    border-right: 1px solid
+      color-mix(in srgb, var(--tree-color) 25%, transparent);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--tree-color) 25%, transparent);
+    background: color-mix(in srgb, var(--tree-color) 7%, transparent);
+    position: relative;
+    z-index: 1;
+  }
+
+  .node-name {
+    color: var(--tree-color);
+    font-size: 0.875rem;
+    font-weight: bold;
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    line-height: 1.3;
+    min-height: calc(2 * 1.3 * 0.875rem);
+  }
+
+  .node-link {
+    color: inherit;
+    border-bottom: none;
+    text-decoration: none;
+  }
+  .node-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .node-link:hover {
+    color: var(--tree-color) !important;
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+
+  /* ── Tooltip ── */
+  .node-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    background-color: #090c10;
+    border: 1px solid var(--tree-color);
+    border-radius: 4px;
+    padding: 0.75rem 0.9rem;
+    z-index: 200;
+    pointer-events: none;
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.9),
+      0 0 0 1px color-mix(in srgb, var(--tree-color) 20%, transparent);
+    text-align: left;
+  }
+
+  .tree-node:hover {
+    z-index: 50;
+  }
+
+  .tree-node:hover .node-tooltip {
+    display: block;
+  }
+
+  .tooltip-name {
+    font-size: 0.82rem;
+    font-weight: bold;
+    color: var(--tree-color);
+    margin: 0 0 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--tree-color) 30%, transparent);
+    padding-bottom: 0.4rem;
+  }
+
+  .tooltip-effects {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: #d0d4d8;
+  }
+
+  .tooltip-effects li {
+    margin-bottom: 0.2rem;
+  }
+
+  /* ── Mobile: revert to 2-column flexbox wrap, hide SVG connectors ── */
+  @media (max-width: 736px) {
+    .dev-tree {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .tree-node {
+      flex: 1 1 calc(50% - 0.375rem);
+      min-width: 140px;
+      width: auto;
+    }
+    .tree-svg {
+      display: none;
+    }
+    .node-tooltip {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Draws SVG bezier paths from each node's bottom-center to its child's top-center.
+   * Called once on page load for the initially-active tree (via ResizeObserver),
+   * and again via the 'tree:show' custom event whenever a tab switches panels.
+   */
+  function drawConnectors(treeEl: HTMLElement): void {
+    const svg = treeEl.querySelector<SVGElement>(".tree-svg");
+    if (!svg) return;
+
+    const color =
+      getComputedStyle(treeEl).getPropertyValue("--tree-color").trim() ||
+      "#888888";
+
+    svg.querySelectorAll("path.tree-conn").forEach((p) => p.remove());
+
+    // Use the SVG's own bounding rect as the coordinate origin.
+    // This is correct even when justify-content:center shifts the grid
+    // away from the container's left edge.
+    const svgRect = svg.getBoundingClientRect();
+
+    treeEl
+      .querySelectorAll<HTMLElement>(".tree-node[data-prereq]")
+      .forEach((child) => {
+        const prereqId = child.dataset.prereq;
+        if (!prereqId) return;
+
+        const parent = treeEl.querySelector<HTMLElement>(
+          `.tree-node[data-dev-id="${prereqId}"]`,
+        );
+        if (!parent) return;
+
+        const pr = parent.getBoundingClientRect();
+        const cr = child.getBoundingClientRect();
+
+        // Start: bottom-center of parent; End: top-center of child
+        const x1 = (pr.left + pr.right) / 2 - svgRect.left;
+        const y1 = pr.bottom - svgRect.top;
+        const x2 = (cr.left + cr.right) / 2 - svgRect.left;
+        const y2 = cr.top - svgRect.top;
+
+        // Cubic bezier — smooth S-curve between tiers
+        const mid = y1 + (y2 - y1) * 0.5;
+
+        const path = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path",
+        );
+        path.classList.add("tree-conn");
+        path.setAttribute(
+          "d",
+          `M ${x1} ${y1} L ${x1} ${mid} L ${x2} ${mid} L ${x2} ${y2}`,
+        );
+        path.setAttribute("stroke", color);
+        path.setAttribute("stroke-width", "2");
+        path.setAttribute("fill", "none");
+        path.setAttribute("opacity", "0.8");
+        svg.appendChild(path);
+      });
+  }
+
+  document.querySelectorAll<HTMLElement>(".dev-tree").forEach((treeEl) => {
+    treeEl.addEventListener("tree:show", () => drawConnectors(treeEl));
+
+    // Draw when visible: either not inside a tab panel at all, or inside the active one
+    const panel = treeEl.closest(".tree-panel");
+    if (!panel || panel.classList.contains("is-active")) {
+      const ro = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+            ro.disconnect();
+            drawConnectors(treeEl);
+            break;
+          }
+        }
+      });
+      ro.observe(treeEl);
+    }
+  });
+</script>

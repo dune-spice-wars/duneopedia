@@ -1,0 +1,203 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+
+import factionsBanner     from "../assets/banners/factionsBanner.jpg";
+import atreidesBanner     from "../assets/banners/atreidesBanner.jpg";
+import harkonnenBanner    from "../assets/banners/harkonnenBanner.jpg";
+import smugglersBanner    from "../assets/banners/smugglersBanner.jpg";
+import fremenBanner       from "../assets/banners/fremenBanner.jpg";
+import corrinoBanner      from "../assets/banners/corrinoEmperorBanner.png";
+import ecazBanner         from "../assets/banners/ecazBanner.jpg";
+import buildingsBanner    from "../assets/banners/buildingsBanner.jpg";
+import unitsBanner        from "../assets/banners/unitsBanner.jpg";
+import developmentsBanner from "../assets/banners/developmentsBanner.png";
+import councilorsBanner   from "../assets/banners/councilorsBanner.jpg";
+---
+
+<Layout
+	title="Factions"
+	description="There are currently six factions in Dune: Spice Wars. See all information about their unique units, abilities, councilors and developments. | Duneopedia"
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>All Factions</h1>
+			<span class="image main"
+				><Image src={factionsBanner} alt="Factions Banner" /></span
+			>
+			<h2><center>⇓</center></h2>
+		</header>
+		<header id="header"></header>
+		<header class="main">
+			<h1>House Atreides</h1>
+		</header>
+		<div class="zoom">
+			<a href="/atreides"
+				><span class="image main"
+					><Image src={atreidesBanner} alt="Atreides Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"The stellar reputation of House Atreides owes a lot to its leader's
+				commanding style: firm yet honorable and fair. By imperial decree, the
+				Atreides have just inherited the stewardship of Arrakis and have a lot
+				of work to do to take over from the Harkonnens."
+			</h3>
+		</blockquote>
+		<header id="header"></header>
+		<header class="main">
+			<h1>House Harkonnen</h1>
+		</header>
+		<div class="zoom">
+			<a href="/harkonnen"
+				><span class="image main"
+					><Image src={harkonnenBanner} alt="Harkonnen Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"House Harkonnen shares its chilling reputation with its leader, Baron
+				Vladimir Harkonnen. They have been called despotic, merciless, scheming
+				and devious. And those are only their finer qualities."
+			</h3>
+		</blockquote>
+		<header id="header"></header>
+		<header class="main">
+			<h1>Smugglers</h1>
+		</header>
+		<div class="zoom">
+			<a href="/smugglers"
+				><span class="image main"
+					><Image src={smugglersBanner} alt="Smugglers Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"There's a fine line between smugglers and full-fledged bandits, and
+				Esmar Tuek is adept at walking that line. Smugglers can provide anything
+				to anyone, provided they put the price… and do not look at the specifics
+				too closely."
+			</h3>
+		</blockquote>
+		<header id="header"></header>
+		<header class="main">
+			<h1>Fremen</h1>
+		</header>
+		<div class="zoom">
+			<a href="/fremen"
+				><span class="image main"
+					><Image src={fremenBanner} alt="Fremen Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"Fremen are the only people native to Arrakis and will do anything to
+				protect their way against the offworlders. While their leader,
+				Liet-Kynes, doesn't originally come from Dune, she is every bit as
+				determined and attached to the planet as the next Fremen."
+			</h3>
+		</blockquote>
+		<header id="header"></header>
+		<header class="main">
+			<h1>House Corrino</h1>
+		</header>
+		<div class="zoom">
+			<a href="/corrino"
+				><span class="image main"
+					><Image src={corrinoBanner} alt="Corrino Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"Imperial House Corrino has ruled the galaxy for ten millenia, and
+				Shaddam IV intends to keep it that way. The situation on Arrakis calls
+				for the direct intervention of the Padishah Emperor, who will use all
+				His wit and the might of His administration to turn the war to His
+				benefit."
+			</h3>
+		</blockquote>
+		<header id="header"></header>
+		<header class="main">
+			<h1>House Ecaz</h1>
+		</header>
+		<div class="zoom">
+			<a href="/ecaz"
+				><span class="image main"
+					><Image src={ecazBanner} alt="Ecaz Banner" /></span
+				></a
+			>
+		</div>
+
+		<blockquote>
+			<h3>
+				"House Ecaz is known for it's touristic resorts, it's recreational
+				drugs, and it's patronage for the Art. But behind this enticing
+				exterior, the refined house and it's no less refined ruler, Archduchess
+				Armanda, are ruthless and efficient defenders of their interests."
+			</h3>
+		</blockquote>
+
+		<header id="header"></header>
+		<h2>Read more</h2>
+
+		<!-- Section -->
+		<section>
+			<header class="major"></header>
+			<div class="posts">
+				<article>
+					<a href="/buildings" class="image"
+						><Image src={buildingsBanner} alt="Buildings Banner" /></a
+					>
+					<h3>Buildings</h3>
+					<p>
+						Click above to see all of the buildings that can be built within
+						villages including Economy, Military, Statecraft buildings and more!
+					</p>
+				</article>
+				<article>
+					<a href="/units" class="image"
+						><Image src={unitsBanner} alt="Units Banner" /></a
+					>
+					<h3>Units</h3>
+					<p>
+						Click above to see all of the units available to the various
+						factions!
+					</p>
+				</article>
+				<article>
+					<a href="/developments" class="image"
+						><Image src={developmentsBanner} alt="Developments Banner" /></a
+					>
+					<h3>Developments</h3>
+					<p>
+						Click above to see all of the developments available to progress
+						your empire and unlock powerful effects that can turn the tide of
+						battle!
+					</p>
+				</article>
+				<article>
+					<a href="/councilors" class="image"
+						><Image src={councilorsBanner} alt="Councilors Banner" /></a
+					>
+					<h3>Councilors</h3>
+					<p>
+						Click above to see all of the councilors available that factions can
+						use to shape their playstyle!
+					</p>
+				</article>
+			</div>
+		</section>
+	</section>
+</Layout>

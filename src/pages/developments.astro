@@ -1,0 +1,480 @@
+---
+import { Image } from "astro:assets";
+import developmentsBanner from "../assets/banners/developmentsBanner.png";
+import Layout from "../layouts/Layout.astro";
+import { developments, getFactionTree } from "../data/developments";
+import DevelopmentCard from "../components/DevelopmentCard.astro";
+import DevTree from "../components/DevTree.astro";
+import BackToTop from "../components/BackToTop.astro";
+import type { DevelopmentTree, FactionId } from "../data/types";
+
+const TREES: Array<{ id: DevelopmentTree; label: string; color: string }> = [
+  { id: "economy", label: "Economy", color: "#c9aa30" },
+  { id: "military", label: "Military", color: "#cc4444" },
+  { id: "statecraft", label: "Statecraft", color: "#4a88d8" },
+  { id: "expansion", label: "Expansion", color: "#4aaa68" },
+];
+
+const FACTION_ORDER: FactionId[] = [
+  "atreides",
+  "harkonnen",
+  "smugglers",
+  "fremen",
+  "corrino",
+  "ecaz",
+  "vernius",
+];
+const FACTION_LABELS: Record<FactionId, string> = {
+  atreides: "House Atreides",
+  harkonnen: "House Harkonnen",
+  smugglers: "Smugglers",
+  fremen: "Fremen",
+  corrino: "House Corrino",
+  ecaz: "House Ecaz",
+  vernius: "House Vernius",
+};
+const FACTION_COLORS: Record<FactionId, string> = {
+  atreides: "#4aaa68",
+  harkonnen: "#cc3333",
+  smugglers: "#66bbdd",
+  fremen: "#ddcc44",
+  corrino: "#cccccc",
+  ecaz: "#dd66aa",
+  vernius: "#9966cc",
+};
+---
+
+<Layout
+  title="Developments | Duneopedia"
+  description="All the content for the various Developments in Dune: Spice Wars. Includes information about their effects as well as listing the full development trees | Duneopedia"
+>
+  <section>
+    <header class="main" id="top">
+      <h1>Developments</h1>
+    </header>
+    <span class="image main"
+      ><Image src={developmentsBanner} alt="Developments Banner" /></span
+    >
+
+    <blockquote>
+      "The mystery of life isn't a problem to solve, but a reality to
+      experience."
+    </blockquote>
+
+    <!-- GENERAL INFO -->
+    <h2 id="info">General Info</h2>
+    <ul>
+      <li>
+        Developments are unlocked after claiming your first <a
+          class="link"
+          target="_blank"
+          href="/arrakis#villages">Village</a>
+      </li>
+      <li>
+        The more <a class="link" target="_blank" href="/arrakis#knowledge"
+          >Knowledge</a
+        > you have, the faster developments are researched
+      </li>
+      <li>
+        Research time increases exponentially as more developments are completed
+      </li>
+    </ul>
+
+    <header id="header"></header>
+
+    <!-- MAIN TAB BAR -->
+    <div class="main-tabs" role="tablist">
+      <button
+        class="main-tab is-active"
+        role="tab"
+        aria-selected="true"
+        aria-controls="mpanel-generic"
+        data-main="generic"
+        style="--tab-color: #3a6bbf"
+      >
+        Generic
+      </button>
+      {
+        FACTION_ORDER.map((factionId) => (
+          <button
+            class="main-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls={`mpanel-${factionId}`}
+            data-main={factionId}
+            style={`--tab-color: ${FACTION_COLORS[factionId]}`}
+          >
+            {FACTION_LABELS[factionId]}
+          </button>
+        ))
+      }
+    </div>
+
+    <!-- GENERIC PANEL -->
+    <div id="mpanel-generic" class="main-panel is-active" role="tabpanel">
+      <h2 id="trees">Development Trees</h2>
+
+      <!-- Shared tree tabs -->
+      <div class="tree-tabs" role="tablist">
+        {
+          TREES.map((tree, i) => (
+            <button
+              class={`tree-tab tree-tab--${tree.id}${i === 0 ? " is-active" : ""}`}
+              role="tab"
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-controls={`tree-${tree.id}`}
+              data-tree={tree.id}
+              style={`--tab-color: ${tree.color}`}
+            >
+              {tree.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <!-- Shared tree panels -->
+      {
+        TREES.map((tree, i) => (
+          <div
+            class={`tree-panel${i === 0 ? " is-active" : ""}`}
+            id={`tree-${tree.id}`}
+            role="tabpanel"
+          >
+            <DevTree
+              items={developments.filter((d) => !d.faction && d.tree === tree.id)}
+              color={tree.color}
+              treeId={tree.id}
+            />
+          </div>
+        ))
+      }
+
+      <!-- Shared dev cards -->
+      <header id="header"></header>
+      <h2 id="shared">Shared Developments</h2>
+      <p style="font-size:0.9rem;opacity:0.75;margin-bottom:1.5rem;">
+        These developments are available to all factions. Click a node name in
+        the tree above to jump here.
+      </p>
+      {
+        TREES.map((tree) => {
+          const treeDevs = developments.filter(
+            (d) => !d.faction && d.tree === tree.id,
+          );
+          return (
+            <>
+              <h3 id={`shared-${tree.id}`}>{tree.label}</h3>
+              {treeDevs.map((d) => (
+                <DevelopmentCard development={d} />
+              ))}
+            </>
+          );
+        })
+      }
+
+      <BackToTop />
+    </div>
+
+    <!-- FACTION PANELS -->
+    {
+      FACTION_ORDER.map((factionId) => {
+        const mergedTree = getFactionTree(factionId);
+        const uniqueDevs = developments.filter((d) => d.faction === factionId);
+        return (
+          <div
+            id={`mpanel-${factionId}`}
+            class="main-panel"
+            role="tabpanel"
+          >
+            <h2 id={`trees-${factionId}`}>{FACTION_LABELS[factionId]} Development Trees</h2>
+            <p style="font-size:0.9rem;opacity:0.75;margin-bottom:1.5rem;">
+              ★ nodes are faction-unique replacements.
+            </p>
+
+            <!-- Faction tree tabs -->
+            <div class="tree-tabs" role="tablist">
+              {TREES.map((tree, i) => (
+                <button
+                  class={`ftree-tab${i === 0 ? " is-active" : ""}`}
+                  role="tab"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  aria-controls={`ftree-${factionId}-${tree.id}`}
+                  data-faction={factionId}
+                  data-tree={tree.id}
+                  style={`--tab-color: ${tree.color}`}
+                >
+                  {tree.label}
+                </button>
+              ))}
+            </div>
+
+            <!-- Faction tree panels -->
+            {TREES.map((tree, i) => {
+              const items = mergedTree.filter((d) => d.tree === tree.id);
+              return (
+                <div
+                  class={`ftree-panel${i === 0 ? " is-active" : ""}`}
+                  id={`ftree-${factionId}-${tree.id}`}
+                  data-faction={factionId}
+                  role="tabpanel"
+                >
+                  <DevTree
+                    items={items}
+                    color={tree.color}
+                    treeId={`ft-${factionId}-${tree.id}`}
+                    idPrefix={`${factionId}-`}
+                  />
+                </div>
+              );
+            })}
+
+            <!-- Unique dev cards (shown first) -->
+            {uniqueDevs.length > 0 && (
+              <>
+                <header id="header" />
+                <h2 id={`unique-${factionId}`}>{FACTION_LABELS[factionId]} Unique Developments</h2>
+                <p style="font-size:0.9rem;opacity:0.75;margin-bottom:1.5rem;">
+                  These developments replace their shared counterparts for {FACTION_LABELS[factionId]} only.
+                </p>
+                <div class="unique-cards">
+                  {uniqueDevs.map((d) => (
+                    <DevelopmentCard
+                      development={d}
+                      idPrefix={`${factionId}-`}
+                      treeHref={`#trees-${factionId}`}
+                      showFaction={factionId}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
+            <!-- Shared dev cards (always shown) -->
+            <header id="header" />
+            <h2 id={`shared-${factionId}`}>Shared Developments</h2>
+            <p style="font-size:0.9rem;opacity:0.75;margin-bottom:1.5rem;">
+              These developments are available to all factions.
+            </p>
+            {
+              TREES.map((tree) => {
+                const treeDevs = developments.filter(
+                  (d) => !d.faction && d.tree === tree.id,
+                );
+                return (
+                  <>
+                    <h3 id={`shared-${factionId}-${tree.id}`}>{tree.label}</h3>
+                    {treeDevs.map((d) => (
+                      <DevelopmentCard
+                        development={d}
+                        idPrefix={`${factionId}-`}
+                        treeHref={`#trees-${factionId}`}
+                        showFaction={factionId}
+                      />
+                    ))}
+                  </>
+                );
+              })
+            }
+
+            <BackToTop />
+          </div>
+        );
+      })
+    }
+  </section>
+</Layout>
+
+<style>
+  /* ── Main tab bar ── */
+  .main-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .main-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1.4rem;
+    box-shadow: inset 0 0 0 2px var(--tab-color);
+    border: 0;
+    background: transparent;
+    color: var(--tab-color) !important;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: inherit;
+    transition:
+      background 0.15s,
+      color 0.15s;
+    line-height: normal;
+    height: auto;
+  }
+
+  .main-tab:hover,
+  .main-tab.is-active {
+    background: var(--tab-color);
+    color: #1b1f22 !important;
+    box-shadow: inset 0 0 0 2px var(--tab-color);
+  }
+
+  /* ── Main panels ── */
+  .main-panel {
+    display: none;
+  }
+  .main-panel.is-active {
+    display: block;
+  }
+
+  /* ── Tree tab bar (shared + faction) ── */
+  .tree-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tree-tab,
+  .ftree-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1.4rem;
+    box-shadow: inset 0 0 0 2px var(--tab-color);
+    border: 0;
+    background: transparent;
+    color: var(--tab-color) !important;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: inherit;
+    transition:
+      background 0.15s,
+      color 0.15s;
+    line-height: normal;
+    height: auto;
+  }
+
+  .tree-tab:hover,
+  .tree-tab.is-active,
+  .ftree-tab:hover,
+  .ftree-tab.is-active {
+    background: var(--tab-color);
+    color: #1b1f22 !important;
+    box-shadow: inset 0 0 0 2px var(--tab-color);
+  }
+
+  /* ── Tree panels (shared + faction) ── */
+  .tree-panel,
+  .ftree-panel {
+    display: none;
+  }
+  .tree-panel.is-active,
+  .ftree-panel.is-active {
+    display: block;
+  }
+
+  .unique-cards { margin-top: 1.5rem; }
+</style>
+
+<script>
+  // ── Shared tree tabs (inside Generic panel) ──
+  function showTree(treeId: string): void {
+    document.querySelectorAll(".tree-tab").forEach((t) => {
+      t.classList.remove("is-active");
+      t.setAttribute("aria-selected", "false");
+    });
+    document.querySelectorAll(".tree-panel").forEach((p) => p.classList.remove("is-active"));
+
+    const tab = document.querySelector<HTMLButtonElement>(`.tree-tab[data-tree="${treeId}"]`);
+    const panel = document.getElementById(`tree-${treeId}`);
+    tab?.classList.add("is-active");
+    tab?.setAttribute("aria-selected", "true");
+    panel?.classList.add("is-active");
+    panel?.querySelector<HTMLElement>(".dev-tree")?.dispatchEvent(new CustomEvent("tree:show"));
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".tree-tab").forEach((tab) => {
+    tab.addEventListener("click", () => showTree(tab.dataset.tree!));
+  });
+
+  // "Back to tree" links on dev cards — switch to the right tree tab before scrolling
+  document.addEventListener("click", (e) => {
+    const link = (e.target as HTMLElement).closest<HTMLElement>("[data-show-tree]");
+    if (!link) return;
+    const faction = link.dataset.showFaction;
+    if (faction) {
+      showFactionTree(faction, link.dataset.showTree!);
+    } else {
+      showTree(link.dataset.showTree!);
+    }
+  });
+
+  // ── Faction tree tabs (inside each faction panel) ──
+  function showFactionTree(factionId: string, treeId: string): void {
+    document.querySelectorAll<HTMLButtonElement>(`.ftree-tab[data-faction="${factionId}"]`).forEach((t) => {
+      t.classList.remove("is-active");
+      t.setAttribute("aria-selected", "false");
+    });
+    document.querySelectorAll<HTMLElement>(`.ftree-panel[data-faction="${factionId}"]`).forEach((p) => {
+      p.classList.remove("is-active");
+    });
+
+    const tab = document.querySelector<HTMLButtonElement>(
+      `.ftree-tab[data-faction="${factionId}"][data-tree="${treeId}"]`,
+    );
+    const panel = document.getElementById(`ftree-${factionId}-${treeId}`);
+    tab?.classList.add("is-active");
+    tab?.setAttribute("aria-selected", "true");
+    panel?.classList.add("is-active");
+    panel?.querySelector<HTMLElement>(".dev-tree")?.dispatchEvent(new CustomEvent("tree:show"));
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".ftree-tab").forEach((tab) => {
+    tab.addEventListener("click", () => showFactionTree(tab.dataset.faction!, tab.dataset.tree!));
+  });
+
+  // ── Main tabs ──
+  function showMain(mainId: string): void {
+    document.querySelectorAll(".main-tab").forEach((t) => {
+      t.classList.remove("is-active");
+      t.setAttribute("aria-selected", "false");
+    });
+    document.querySelectorAll(".main-panel").forEach((p) => p.classList.remove("is-active"));
+
+    const tab = document.querySelector<HTMLButtonElement>(`.main-tab[data-main="${mainId}"]`);
+    const panel = document.getElementById(`mpanel-${mainId}`);
+    tab?.classList.add("is-active");
+    tab?.setAttribute("aria-selected", "true");
+    panel?.classList.add("is-active");
+
+    if (mainId === "generic") {
+      // Re-fire tree:show for the currently active shared tree panel
+      panel?.querySelector<HTMLElement>(".tree-panel.is-active .dev-tree")
+        ?.dispatchEvent(new CustomEvent("tree:show"));
+    } else {
+      // Show the first faction tree tab and draw its connectors
+      const firstTab = panel?.querySelector<HTMLButtonElement>(".ftree-tab");
+      if (firstTab) showFactionTree(mainId, firstTab.dataset.tree!);
+    }
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".main-tab").forEach((tab) => {
+    tab.addEventListener("click", () => showMain(tab.dataset.main!));
+  });
+
+  // Redraw connectors on resize
+  window.addEventListener("resize", () => {
+    document.querySelector<HTMLElement>(".tree-panel.is-active .dev-tree")
+      ?.dispatchEvent(new CustomEvent("tree:show"));
+    document.querySelectorAll<HTMLElement>(".main-panel.is-active .ftree-panel.is-active .dev-tree")
+      .forEach((el) => el.dispatchEvent(new CustomEvent("tree:show")));
+  });
+</script>

@@ -1,0 +1,72 @@
+---
+import type { Development, DevelopmentTree } from "../data/types";
+import BackToTop from "./BackToTop.astro";
+
+interface Props {
+  development: Development;
+  idPrefix?: string; // prefix for the anchor id. Defaults to '' (no prefix)
+  treeHref?: string; // href for the "Back to tree" button. Defaults to '#trees'
+  showFaction?: string; // faction id — when set, triggers the faction tree tab instead of the shared one
+}
+
+const {
+  development,
+  idPrefix = "",
+  treeHref = "#trees",
+  showFaction,
+} = Astro.props;
+
+const TREE_LABELS: Record<DevelopmentTree, string> = {
+  statecraft: "Statecraft",
+  expansion: "Expansion",
+  economy: "Economy",
+  military: "Military",
+};
+---
+
+<h3 id={`${idPrefix}${development.id}`}>
+  {
+    development.image && (
+      <img
+        src={development.image}
+        style="height:48px;vertical-align:middle;margin-right:8px;"
+        alt={`${development.name} icon`}
+      />
+    )
+  }
+  <strong>{development.name}</strong>
+  <span
+    style="font-size:0.7em;font-weight:normal;margin-left:0.5em;opacity:0.7;"
+  >
+    [{TREE_LABELS[development.tree]}]
+  </span>
+  {development.faction && <span class="unique-badge">Unique</span>}
+</h3>
+<ul>
+  {development.effects.map((effect) => <li>{effect}</li>)}
+</ul>
+
+<!-- <blockquote>{development.flavorText}</blockquote> -->
+
+<BackToTop
+  href={treeHref}
+  label="Back to tree"
+  data-show-tree={development.tree}
+  {...showFaction ? { "data-show-faction": showFaction } : {}}
+/>
+
+<style>
+  .unique-badge {
+    display: inline-block;
+    margin-left: 0.6em;
+    padding: 0.1em 0.5em;
+    font-size: 0.6em;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    opacity: 0.8;
+  }
+</style>

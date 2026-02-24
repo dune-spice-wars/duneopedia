@@ -1,0 +1,74 @@
+---
+import { Image } from "astro:assets";
+import { factions } from "../data/factions";
+---
+
+<div class="faction-links">
+  {
+    factions.map((faction) => (
+      <a href={`/${faction.id}`} class="faction-card">
+        <div class="faction-card__img">
+          <Image src={faction.logo!} alt={`${faction.name} logo`} />
+        </div>
+        <div class="faction-card__body">
+          <h3>{faction.name}</h3>
+          <p>{faction.blockquote}</p>
+        </div>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .faction-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .faction-card {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .faction-card:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    color: inherit;
+  }
+
+  .faction-card__img img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+  }
+
+  .faction-card__body {
+    padding: 1rem 1.1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faction-card__body h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    border-bottom: none;
+  }
+
+  .faction-card__body p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    opacity: 0.75;
+    margin: 0;
+  }
+</style>

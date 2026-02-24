@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import type { Councilor } from "../data/types";
+
+interface Props {
+  councilor: Councilor;
+  imageAlign?: "left" | "right";
+}
+
+const { councilor, imageAlign = "left" } = Astro.props;
+---
+
+<div class="councilor-card">
+  {
+    councilor.image && (
+      <span class={`image ${imageAlign}`}>
+        <Image src={councilor.image} alt={councilor.name} />
+      </span>
+    )
+  }
+  <h3 id={councilor.id}>{councilor.name}</h3>
+  <h5>Difficulty: {councilor.difficulty}</h5>
+  <div class="abilities">
+    <span class="abilities-label">Abilities</span>
+    <ul>
+      {councilor.abilities.map((ability) => <li>{ability}</li>)}
+    </ul>
+  </div>
+  <div class="box">
+    <p>"{councilor.flavorText}"</p>
+  </div>
+</div>
+
+<style>
+  .councilor-card {
+    overflow: hidden; /* contains the floated image */
+    margin-bottom: 4rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .councilor-card :global(.image.left),
+  .councilor-card :global(.image.right) {
+    max-width: 175px;
+  }
+
+  .abilities {
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .abilities-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.4rem;
+  }
+
+  .abilities ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .abilities ul li {
+    padding: 0.3rem 0 0.3rem 1.25rem;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .abilities ul li:last-child {
+    border-bottom: none;
+  }
+
+  .abilities ul li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+  }
+</style>

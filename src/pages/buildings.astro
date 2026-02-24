@@ -1,0 +1,204 @@
+---
+import { Image } from "astro:assets";
+import buildingsBanner from "../assets/banners/buildingsBanner.jpg";
+import Layout from "../layouts/Layout.astro";
+import { buildings } from "../data/buildings";
+import BuildingCard from "../components/BuildingCard.astro";
+import BackToTop from "../components/BackToTop.astro";
+import type { BuildingCategory } from "../data/types";
+
+type Subsection = { id: BuildingCategory; label: string; subNumber: number };
+type Section = {
+	id: string;
+	label: string;
+	number: number;
+	note?: string;
+	subsections: Subsection[];
+};
+
+const SECTIONS: Section[] = [
+	{
+		id: "village",
+		label: "Village Buildings",
+		number: 1,
+		subsections: [
+			{ id: "village-economy", label: "Economy", subNumber: 1 },
+			{ id: "village-military", label: "Military", subNumber: 2 },
+			{ id: "village-statecraft", label: "Statecraft", subNumber: 3 },
+		],
+	},
+	{
+		id: "mainbase",
+		label: "Main Base Buildings",
+		number: 2,
+		subsections: [
+			{ id: "mainbase-economy", label: "Economy", subNumber: 1 },
+			{ id: "mainbase-military", label: "Military", subNumber: 2 },
+			{ id: "mainbase-statecraft", label: "Statecraft", subNumber: 3 },
+		],
+	},
+	{
+		id: "underworld",
+		label: "Underworld Headquarters",
+		number: 3,
+		note: "Smugglers only",
+		subsections: [
+			{ id: "underworld-economy", label: "Economy", subNumber: 1 },
+			{ id: "underworld-military", label: "Military", subNumber: 2 },
+			{ id: "underworld-statecraft", label: "Statecraft", subNumber: 3 },
+			{
+				id: "underworld-mainbase",
+				label: "Enemy Main Base (10k Hegemony)",
+				subNumber: 4,
+			},
+		],
+	},
+	{
+		id: "sietch",
+		label: "Sietch Settlements",
+		number: 4,
+		note: "Fremen, 10k Hegemony",
+		subsections: [
+			{ id: "sietch-economy", label: "Economy", subNumber: 1 },
+			{ id: "sietch-military", label: "Military", subNumber: 2 },
+			{ id: "sietch-statecraft", label: "Statecraft", subNumber: 3 },
+		],
+	},
+];
+
+const grouped = SECTIONS.map((section) => ({
+	...section,
+	subsections: section.subsections.map((sub) => ({
+		...sub,
+		buildings: buildings.filter((b) => b.category === sub.id),
+	})),
+}));
+---
+
+<Layout
+	title="Buildings"
+	description="All the content for the various Buildings in Dune: Spice Wars. This includes information about their Build Cost, Upkeep, Required Developments and Effects | Duneopedia"
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Buildings</h1>
+		</header>
+		<span class="image main"
+			><Image src={buildingsBanner} alt="Buildings Banner" /></span
+		>
+
+		<blockquote>
+			"Growth is limited by the necessity which is present in the least amount.
+			And naturally, the least favorable condition controls the growth rate."
+		</blockquote>
+
+		<!-- LIST OF CONTENTS -->
+		<h4 id="top">List of Contents</h4>
+		<div id="contents" class="row">
+			{
+				grouped.map((section) => (
+					<div class="col-3 col-12-medium">
+						<ul>
+							<a href={`#${section.id}`}>
+								<li>
+									<strong>
+										{section.number}.0 | {section.label}
+										{section.note && ` (${section.note})`}
+									</strong>
+								</li>
+							</a>
+							{section.subsections.map((sub) => (
+								<>
+									<a href={`#${sub.id}`}>
+										<li>
+											{section.number}.{sub.subNumber} | {sub.label}
+										</li>
+									</a>
+									<ul>
+										{sub.buildings.map((b) => (
+											<a href={`#${b.id}`}>
+												<li>{b.name}</li>
+											</a>
+										))}
+									</ul>
+								</>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<!-- END LIST OF CONTENTS -->
+
+		<!-- VILLAGE SLOT INFO -->
+		<p>
+			<strong>
+				By default, every <a
+					class="link"
+					target="_blank"
+					href="/arrakis#villages">Village</a
+				> can construct 2 buildings. However, this limit can be increased by spending
+				additional <a class="link" target="_blank" href="/arrakis#plascrete"
+					>Plascrete</a
+				>:
+			</strong>
+		</p>
+		<ul>
+			<li>
+				+ 3rd Building: 100 <a
+					class="link"
+					target="_blank"
+					href="/arrakis#plascrete">Plascrete</a
+				>
+			</li>
+			<li>
+				+ 4th Building: 200 <a
+					class="link"
+					target="_blank"
+					href="/arrakis#plascrete">Plascrete</a
+				>
+			</li>
+			<li>
+				+ 5th Building: 400 <a
+					class="link"
+					target="_blank"
+					href="/arrakis#plascrete">Plascrete</a
+				>
+			</li>
+			<li>
+				As a general rule, you can only construct 1 of each Building in every <a
+					class="link"
+					target="_blank"
+					href="/arrakis#villages">Village</a
+				>
+			</li>
+		</ul>
+
+		{
+			grouped.map((section) => (
+				<>
+					<header id="header" />
+					<h2 id={section.id}>
+						{section.label}
+						{section.note && (
+							<span style="font-size:0.7em;font-weight:normal;margin-left:0.5em;opacity:0.7;">
+								({section.note})
+							</span>
+						)}
+					</h2>
+
+					{section.subsections.map((sub) => (
+						<>
+							<h3 id={sub.id}>{sub.label}</h3>
+							{sub.buildings.map((b) => (
+								<BuildingCard building={b} />
+							))}
+						</>
+					))}
+					<BackToTop />
+				</>
+			))
+		}
+	</section>
+</Layout>

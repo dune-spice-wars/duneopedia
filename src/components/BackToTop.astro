@@ -1,0 +1,13 @@
+---
+interface Props {
+  href?: string;
+  label?: string;
+  [key: string]: unknown;
+}
+
+const { href = '#top', label = 'Back to top', ...rest } = Astro.props;
+---
+
+<p style="margin: 0.25rem 0 1rem;">
+  <a href={href} class="link" style="font-size:0.8rem;" {...rest}>↑ {label}</a>
+</p>

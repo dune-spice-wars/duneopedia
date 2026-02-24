@@ -1,0 +1,121 @@
+---
+import { Image } from "astro:assets";
+import councilorsBanner from "../assets/banners/councilorsBanner.jpg";
+import Layout from "../layouts/Layout.astro";
+import { councilors } from "../data/councilors";
+import CouncilorCard from "../components/CouncilorCard.astro";
+import BackToTop from "../components/BackToTop.astro";
+import type { FactionId } from "../data/types";
+
+const FACTION_ORDER: FactionId[] = [
+	"atreides",
+	"harkonnen",
+	"smugglers",
+	"fremen",
+	"corrino",
+	"ecaz",
+	"vernius",
+];
+
+const FACTION_LABELS: Record<FactionId, string> = {
+	atreides: "House Atreides",
+	harkonnen: "House Harkonnen",
+	smugglers: "Smugglers",
+	fremen: "Fremen",
+	corrino: "House Corrino",
+	ecaz: "House Ecaz",
+	vernius: "House Vernius",
+};
+
+const grouped = FACTION_ORDER.map((faction, fi) => ({
+	faction,
+	label: FACTION_LABELS[faction],
+	number: fi + 1,
+	members: councilors.filter((c) => c.faction === faction),
+}));
+
+// 4 columns for the ToC (7 groups: 2, 2, 2, 1)
+const tocCols = [
+	grouped.slice(0, 2),
+	grouped.slice(2, 4),
+	grouped.slice(4, 6),
+	grouped.slice(6, 7),
+];
+---
+
+<Layout
+	title="Councilors"
+	description="All the content regarding the various Councilors in Dune: Spice Wars. Information about their Abilities and their effect on your playstyle and Faction | Duneopedia"
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Councilors</h1>
+		</header>
+		<span class="image main">
+			<Image src={councilorsBanner} alt="Councilors Banner" /></span
+		>
+
+		<blockquote>
+			"Good government never depends upon laws, but upon the personal qualities
+			of those who govern. The machinery of government is always subordinate to
+			the will of those who administer that machinery. The most important
+			element of government, therefore, is the method of choosing leaders."
+		</blockquote>
+
+		<p>
+			After picking a faction, you are able to select 2 Councilors that will
+			shape your playstyle throughout the game.
+		</p>
+
+		<!-- LIST OF CONTENTS -->
+		<h4 id="top">List of Contents</h4>
+		<div id="contents" class="row">
+			{
+				tocCols.map((col) => (
+					<div class="col-3 col-12-medium">
+						<ul>
+							{col.map((group) => (
+								<>
+									<a href={`#${group.faction}`}>
+										<li>
+											<strong>
+												{group.number}.0 | {group.label}
+											</strong>
+										</li>
+									</a>
+									<ul>
+										{group.members.map((c, i) => (
+											<a href={`#${c.id}`}>
+												<li>
+													{group.number}.{i + 1} | {c.name}
+												</li>
+											</a>
+										))}
+									</ul>
+								</>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<!-- END LIST OF CONTENTS -->
+
+		{
+			grouped.map((group) => (
+				<>
+					<header id="header" />
+					<h2 id={group.faction}>{group.label}</h2>
+					{group.members.map((c, i) => (
+						<CouncilorCard
+							councilor={c}
+							imageAlign={i % 2 === 0 ? "left" : "right"}
+						/>
+					))}
+					<BackToTop />
+				</>
+			))
+		}
+	</section>
+</Layout>

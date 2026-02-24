@@ -1,0 +1,285 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import { factions } from "../data/factions";
+import { councilors } from "../data/councilors";
+import { units } from "../data/units";
+import { developments, getFactionTree } from "../data/developments";
+import CouncilorCard from "../components/CouncilorCard.astro";
+import UnitCard from "../components/UnitCard.astro";
+import DevelopmentCard from "../components/DevelopmentCard.astro";
+import DevTree from "../components/DevTree.astro";
+import type { FactionId, DevelopmentTree } from "../data/types";
+
+export function getStaticPaths() {
+	return factions.map((f) => ({ params: { faction: f.id } }));
+}
+
+const { faction } = Astro.params as { faction: FactionId };
+const fd = factions.find((f) => f.id === faction)!;
+
+const factionCouncilors = councilors.filter((c) => c.faction === faction);
+const factionUnits = units.filter((u) => u.category === faction);
+
+const TREE_ORDER: DevelopmentTree[] = [
+	"statecraft",
+	"expansion",
+	"economy",
+	"military",
+];
+const TREE_LABELS: Record<DevelopmentTree, string> = {
+	statecraft: "Statecraft",
+	expansion: "Expansion",
+	economy: "Economy",
+	military: "Military",
+};
+
+const TREE_COLORS: Record<DevelopmentTree, string> = {
+  statecraft: '#4a88d8',
+  expansion:  '#4aaa68',
+  economy:    '#c9aa30',
+  military:   '#cc4444',
+};
+
+const mergedTree = getFactionTree(faction);
+
+// For DevTree visuals: full merged tree per branch
+const treeBranches = TREE_ORDER.map((tree, i) => ({
+  tree,
+  label: TREE_LABELS[tree],
+  color: TREE_COLORS[tree],
+  items: mergedTree.filter((d) => d.tree === tree),
+})).filter((g) => g.items.length > 0);
+
+// For dev cards: unique devs only
+const uniqueByBranch = TREE_ORDER.map((tree, i) => ({
+  tree,
+  label: TREE_LABELS[tree],
+  subNumber: i + 1,
+  items: developments.filter((d) => d.faction === faction && d.tree === tree),
+})).filter((g) => g.items.length > 0);
+---
+
+<Layout
+	title={fd.name}
+	description={`All the content for the ${fd.name} Faction in Dune: Spice Wars. Includes information about Abilities, Hegemony Bonuses, Units, Councilors, Developments | Duneopedia`}
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>{fd.name}</h1>
+		</header>
+		<span class="image main"
+			><Image src={fd.banner} alt={`${fd.name} Banner`} /></span
+		>
+
+		<blockquote>{fd.blockquote}</blockquote>
+
+		<!-- LIST OF CONTENTS -->
+		<h4 id="top">List of Contents</h4>
+		<div id="contents" class="row">
+			<div class="col-4 col-12-medium">
+				<ul>
+					<a href="#factionBonus"
+						><li><strong>1.0 | Faction Bonuses</strong></li></a
+					>
+					<ul>
+						<a href="#5kHeg"><li>1.1 | 5k Hegemony</li></a>
+						<a href="#10kHeg"><li>1.2 | 10k Hegemony</li></a>
+						{
+							fd.uniqueAbility && (
+								<a href="#uniqueAbility">
+									<li>1.3 | {fd.uniqueAbility.name}</li>
+								</a>
+							)
+						}
+					</ul>
+					<a href="#councilors"><li><strong>2.0 | Councilors</strong></li></a>
+					<ul>
+						{
+							factionCouncilors.map((c, i) => (
+								<a href={`#${c.id}`}>
+									<li>
+										2.{i + 1} | {c.name}
+									</li>
+								</a>
+							))
+						}
+					</ul>
+					<a href="#units"><li><strong>3.0 | Units</strong></li></a>
+					<ul>
+						{
+							factionUnits.map((u, i) => (
+								<a href={`#${u.id}`}>
+									<li>
+										3.{i + 1} | {u.name}
+									</li>
+								</a>
+							))
+						}
+					</ul>
+					<a href="#developments"
+						><li><strong>4.0 | Unique Developments</strong></li></a
+					>
+					<ul>
+						{
+							uniqueByBranch.map((g, i) => (
+								<a href={`#dev-${g.tree}`}>
+									<li>
+										4.{i + 1} | {g.label}
+									</li>
+								</a>
+							))
+						}
+					</ul>
+				</ul>
+			</div>
+		</div>
+		<!-- END LIST OF CONTENTS -->
+
+		<!-- FACTION BONUSES -->
+		<header id="header"></header>
+		<h2 id="factionBonus">Faction Bonuses</h2>
+		<ul>
+			{fd.passives.map((p) => <li>{p}</li>)}
+		</ul>
+
+		<h3 id="5kHeg">At 5k Hegemony</h3>
+		<ul>
+			{fd.hegemony5k.map((b) => <li>{b}</li>)}
+		</ul>
+
+		<h3 id="10kHeg">At 10k Hegemony</h3>
+		<ul>
+			{fd.hegemony10k.map((b) => <li>{b}</li>)}
+		</ul>
+
+		{
+			fd.uniqueAbility && (
+				<>
+					<h3 id="uniqueAbility">{fd.uniqueAbility.name}</h3>
+					<p>{fd.uniqueAbility.description}</p>
+					<ul>
+						{fd.uniqueAbility.effects.map((e) => (
+							<li>{e}</li>
+						))}
+					</ul>
+				</>
+			)
+		}
+		<!-- END FACTION BONUSES -->
+
+		<!-- COUNCILORS -->
+		<header id="header"></header>
+		<h2 id="councilors">Councilors</h2>
+		{
+			factionCouncilors.map((c, i) => (
+				<CouncilorCard
+					councilor={c}
+					imageAlign={i % 2 === 0 ? "left" : "right"}
+				/>
+			))
+		}
+		<!-- END COUNCILORS -->
+
+		<!-- UNITS -->
+		<header id="header"></header>
+		<h2 id="units">Units</h2>
+		{factionUnits.map((u) => <UnitCard unit={u} />)}
+		<!-- END UNITS -->
+
+		<!-- DEVELOPMENTS -->
+		<header id="header"></header>
+		<h2 id="developments">{fd.name} Development Tree</h2>
+
+		<!-- Tree visual tabs -->
+		<div class="tree-tabs" role="tablist">
+			{treeBranches.map((b, i) => (
+				<button
+					class={`tree-tab${i === 0 ? ' is-active' : ''}`}
+					role="tab"
+					aria-selected={i === 0 ? 'true' : 'false'}
+					aria-controls={`ftree-${b.tree}`}
+					data-tree={b.tree}
+					style={`--tab-color: ${b.color}`}
+				>{b.label}</button>
+			))}
+		</div>
+		{treeBranches.map((b, i) => (
+			<div class={`tree-panel${i === 0 ? ' is-active' : ''}`} id={`ftree-${b.tree}`} role="tabpanel">
+				<DevTree items={b.items} color={b.color} treeId={`f-${faction}-${b.tree}`} linkBase="/developments" />
+			</div>
+		))}
+
+		<!-- Unique dev cards -->
+		<h3 id="unique-devs">Unique Developments</h3>
+		<p style="font-size:0.85rem;opacity:0.7;margin-bottom:1.5rem;">★ nodes in the tree above are unique to {fd.name}.</p>
+		{
+			uniqueByBranch.map((g) => (
+				<>
+					<h4 id={`dev-${g.tree}`}>{g.label}</h4>
+					{g.items.map((d) => (
+						<DevelopmentCard development={d} />
+					))}
+				</>
+			))
+		}
+		<!-- END DEVELOPMENTS -->
+	</section>
+</Layout>
+
+<style>
+	/* ── Tree tabs (reuse developments page pattern) ── */
+	.tree-tabs {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		flex-wrap: wrap;
+	}
+	.tree-tab {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.55rem 1.4rem;
+		box-shadow: inset 0 0 0 2px var(--tab-color);
+		border: 0;
+		background: transparent;
+		color: var(--tab-color) !important;
+		cursor: pointer;
+		font-weight: bold;
+		font-size: 0.82rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-family: inherit;
+		transition: background 0.15s, color 0.15s;
+		line-height: normal;
+		height: auto;
+	}
+	.tree-tab:hover,
+	.tree-tab.is-active {
+		background: var(--tab-color);
+		color: #1b1f22 !important;
+		box-shadow: inset 0 0 0 2px var(--tab-color);
+	}
+	.tree-panel { display: none; }
+	.tree-panel.is-active { display: block; }
+</style>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>('.tree-tab').forEach((tab) => {
+		tab.addEventListener('click', () => {
+			const treeId = tab.dataset.tree!;
+			document.querySelectorAll('.tree-tab').forEach(t => {
+				t.classList.remove('is-active');
+				t.setAttribute('aria-selected', 'false');
+			});
+			document.querySelectorAll('.tree-panel').forEach(p => p.classList.remove('is-active'));
+			tab.classList.add('is-active');
+			tab.setAttribute('aria-selected', 'true');
+			const panel = document.getElementById(`ftree-${treeId}`);
+			panel?.classList.add('is-active');
+			panel?.querySelector<HTMLElement>('.dev-tree')
+				?.dispatchEvent(new CustomEvent('tree:show'));
+		});
+	});
+</script>

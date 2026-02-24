@@ -1,0 +1,32 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+	title="Duneopedia"
+	description="An unofficial guide for Dune: Spice Wars, updated for the End of Life patch."
+>
+	<section id="banner">
+		<div class="content">
+			<header>
+				<h1>Duneopedia</h1>
+			</header>
+			<p>
+				An unofficial guide for the game Dune: Spice Wars, updated for the End
+				of Life patch.
+			</p>
+		</div>
+		<span class="image object">
+			<video
+				autoplay
+				loop
+				muted
+				playsinline
+				poster="/images/site/duneLogoMobile.webp"
+				style="width:100%;height:auto;"
+			>
+				<source src="/images/site/duneHand.webm" type="video/webm" />
+			</video>
+		</span>
+	</section>
+</Layout>

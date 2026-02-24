@@ -1,0 +1,31 @@
+---
+import type { Cost } from '../data/types';
+
+interface Props {
+  cost: Cost;
+}
+
+const { cost } = Astro.props;
+
+const RESOURCES = [
+  { key: 'solari'        as const, label: 'Solari',         anchor: 'solari' },
+  { key: 'manpower'      as const, label: 'Manpower',       anchor: 'manpower' },
+  { key: 'water'         as const, label: 'Water',          anchor: 'water' },
+  { key: 'commandPoints' as const, label: 'Command Points', anchor: 'commandPoints' },
+  { key: 'plascrete'     as const, label: 'Plascrete',      anchor: 'plascrete' },
+  { key: 'guildFavour'   as const, label: 'Guild Favour',   anchor: 'guildFavour' },
+  { key: 'fuelCells'     as const, label: 'Fuel Cells',     anchor: 'fuelCells' },
+  { key: 'machineScraps' as const, label: 'Machine Scraps', anchor: 'machineScraps' },
+  { key: 'influence'     as const, label: 'Influence',      anchor: 'influence' },
+  { key: 'intel'         as const, label: 'Intel',          anchor: 'intel' },
+  { key: 'authority'     as const, label: 'Authority',      anchor: 'authority' },
+];
+
+const parts = RESOURCES.filter(r => cost[r.key] != null);
+const html = parts.length === 0
+  ? 'None'
+  : parts
+      .map(r => `${cost[r.key]} <a class="link" target="_blank" href="/arrakis#${r.anchor}">${r.label}</a>`)
+      .join(' | ');
+---
+<span set:html={html} />

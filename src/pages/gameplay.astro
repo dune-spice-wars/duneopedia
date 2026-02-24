@@ -1,0 +1,954 @@
+---
+import { Image } from "astro:assets";
+import gameplayBanner from "../assets/banners/gameplayBanner.png";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+	title="Gameplay"
+	description="Content for the various Gameplay elements in Dune: Spice Wars. This includes information about Victory Conditions, Espionage, Landsraad, Points of Interest | Duneopedia"
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Gameplay</h1>
+		</header>
+		<span class="image main"
+			><Image src={gameplayBanner} alt="Gameplay Banner" /></span
+		>
+
+		<blockquote>
+			“I must not fear. Fear is the mind-killer. Fear is the little-death that
+			brings total obliteration. I will face my fear. I will permit it to pass
+			over me and through me. And when it has gone past I will turn the inner
+			eye to see its path. Where the fear has gone there will be nothing. Only I
+			will remain.”
+		</blockquote>
+
+		<!-- LIST OF CONTENTS -->
+		<h4 id="top">List of Contents</h4>
+		<div id="contents" class="row">
+			<div class="col-6 col-12-medium">
+				<ul>
+					<a href="#victory"><li><strong>1.0 | Victory Conditions</strong></li></a>
+					<ul>
+						<a href="#domination"><li>1.1 | Domination</li></a>
+						<a href="#hegemony"><li>1.2 | Hegemony</li></a>
+						<a href="#political"><li>1.3 | Political</li></a>
+						<a href="#economical"><li>1.4 | Economical</li></a>
+					</ul>
+					<a href="#espionage"><li><strong>2.0 | Espionage</strong></li></a>
+					<ul>
+						<a href="#agents"><li>2.1 | Agents</li></a>
+						<a href="#assignments"><li>2.2 | Assignments</li></a>
+						<a href="#operations"><li>2.3 | Operations</li></a>
+						<a href="#assassinations"><li>2.4 | Assassination Operations</li></a>
+					</ul>
+					<a href="#landsraad"><li><strong>3.0 | Landsraad Council</strong></li></a>
+					<ul>
+						<a href="#resolutions"><li>3.1 | Resolutions</li></a>
+						<a href="#charters"><li>3.2 | Charters</li></a>
+					</ul>
+				</ul>
+			</div>
+			<div class="col-6 col-12-medium">
+				<ul>
+					<a href="#specialEvents"><li><strong>4.0 | Special Events</strong></li></a>
+					<ul>
+						<a href="#eventInfo"><li>4.1 | General Info</li></a>
+						<a href="#allEvents"><li>4.2 | Event List</li></a>
+					</ul>
+					<a href="#POI"><li><strong>5.0 | Points of Interest</strong></li></a>
+					<ul>
+						<a href="#generalPOI"><li>5.1 | General Info</li></a>
+						<a href="#allPOI"><li>5.2 | Points of Interest List</li></a>
+					</ul>
+				</ul>
+			</div>
+		</div>
+		<!-- END LIST OF CONTENTS -->
+
+		<!-- VICTORY INFO -->
+		<header id="header"></header>
+		<h2 id="victory">Victory Conditions</h2>
+		<h3 id="domination">Domination</h3>
+		<p>
+			Achieve a Domination victory by eliminating all opposing Factions, either
+			by destroying their Main Base or through Assassination.
+		</p>
+
+		<h3 id="political">Political</h3>
+		<p>
+			Achieve a Political victory by being elected to the Governor of Dune
+			Charter for 45 days.
+		</p>
+
+		<h3 id="hegemony">Hegemony</h3>
+		<p>Achieve a Hegemony victory by reaching 30,000 Hegemony.</p>
+
+		<h3 id="economical">Economical</h3>
+		<p>Achieve an Economical victory by holding 50% of CHOAM Shares.</p>
+		<!-- END VICTORY -->
+
+		<!-- ESPIONAGE -->
+		<header id="header"></header>
+		<h2 id="espionage">Espionage</h2>
+		<h3 id="agents">Agents</h3>
+		<li>
+			Your first agent will only start recruiting once you have researched their
+			first Development
+		</li>
+		<p>
+			Captured agents can be traded back from the enemy faction, however they
+			also have a chance to escape every day
+		</p>
+
+		<p>
+			Each agent will have 1 special trait that modifies their abilities
+			according to the below table:
+		</p>
+		<div class="table-wrapper">
+			<table>
+				<thead>
+					<tr>
+						<th>Trait</th>
+						<th>Effect</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Bene Gesserit</td>
+						<td>This agent produces 100% more Infiltration</td>
+					</tr>
+					<tr>
+						<td>Charistmatic</td>
+						<td
+							><a class="link" target="_blank" href="arrakis.html#influence"
+								>Influence</a
+							> global production is increased by 2% per Infiltration level</td
+						>
+					</tr>
+					<tr>
+						<td>Council Agent</td>
+						<td>+100% Agent recruitment speed</td>
+					</tr>
+					<tr>
+						<td>Engineer</td>
+						<td
+							><li>
+								<a class="link" target="_blank" href="arrakis.html#plascrete"
+									>Plascrete</a
+								> global production is increased by 1% per Infiltration level
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Ghost</td>
+						<td
+							>This agent produces 50% more <a
+								class="link"
+								target="_blank"
+								href="arrakis.html#intel">Intel</a
+							></td
+						>
+					</tr>
+					<tr>
+						<td>Intendant</td>
+						<td
+							><li>
+								This agent produces 20% of every resource but Infiltration
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Mentat</td>
+						<td>This agent produces 50% of every resource but Infiltration</td>
+					</tr>
+					<tr>
+						<td>Merchant</td>
+						<td
+							><a class="link" target="_blank" href="arrakis.html#solari"
+								>Solari</a
+							> global production is increased by 1% per Infiltration level</td
+						>
+					</tr>
+					<tr>
+						<td>Political Mastermind</td>
+						<td
+							>+5% <a class="link" target="_blank" href="arrakis.html#influence"
+								>Influence</a
+							> production</td
+						>
+					</tr>
+					<tr>
+						<td>Psychologist</td>
+						<td
+							>This agent produces 20% more <a
+								class="link"
+								target="_blank"
+								href="arrakis.html#intel">Intel</a
+							></td
+						>
+					</tr>
+					<tr>
+						<td>Recruiter</td>
+						<td>+20% Agent recruitment speed</td>
+					</tr>
+					<tr>
+						<td>Suk Doctor</td>
+						<td
+							><a class="link" target="_blank" href="arrakis.html#knowledge"
+								>Knowledge</a
+							> global production is increased by 2% per Infiltration level</td
+						>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h3 id="assignments">Assignments</h3>
+		<p>
+			Agents can be assigned to one of the following assignments to grant you
+			benefits according to the below table:
+		</p>
+		<div class="table-wrapper">
+			<table>
+				<thead>
+					<tr>
+						<th>Assignment</th>
+						<th>Effect</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Enemy Faction</td>
+						<td
+							><li>
+								+5 <a class="link" target="_blank" href="arrakis.html#intel"
+									>Intel</a
+								>
+							</li>
+							<li>+10 Faction Infiltration</li></td
+						>
+					</tr>
+					<tr>
+						<td>Arrakis</td>
+						<td
+							><li>
+								+1 <a class="link" target="_blank" href="arrakis.html#authority"
+									>Authority</a
+								>
+							</li>
+							<li>
+								+1 <a class="link" target="_blank" href="arrakis.html#intel"
+									>Intel</a
+								>
+							</li>
+							<li>+10 Arrakis Infiltration</li>
+							<li>
+								+30% <a
+									class="link"
+									target="_blank"
+									href="arrakis.html#sietches">Sietch</a
+								> detection speed
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Spacing Guild</td>
+						<td
+							><li>
+								+2 <a class="link" target="_blank" href="arrakis.html#manpower"
+									>Manpower</a
+								>
+							</li>
+							<li>
+								+1 <a class="link" target="_blank" href="arrakis.html#intel"
+									>Intel</a
+								>
+							</li>
+							<li>+10 Spacing Guild Infiltration</li></td
+						>
+					</tr>
+					<tr>
+						<td>CHOAM</td>
+						<td
+							><li>
+								+10 <a class="link" target="_blank" href="arrakis.html#solari"
+									>Solari</a
+								>
+							</li>
+							<li>
+								+1 <a class="link" target="_blank" href="arrakis.html#intel"
+									>Intel</a
+								>
+							</li>
+							<li>+10 CHOAM Infiltration</li></td
+						>
+					</tr>
+					<tr>
+						<td>Landsraad</td>
+						<td
+							><li>
+								+1 <a class="link" target="_blank" href="arrakis.html#influence"
+									>Influence</a
+								>
+							</li>
+							<li>
+								+1 <a class="link" target="_blank" href="arrakis.html#intel"
+									>Intel</a
+								>
+							</li>
+							<li>+10 Landsraad Infiltration</li></td
+						>
+					</tr>
+					<tr>
+						<td>Counterintelligence</td>
+						<td
+							><li>
+								+1% daily chance to capture an enemy agent assigned on your
+								faction
+							</li>
+							<li>10% chance to detect an operation targeting you</li>
+							<li>
+								10% chance to capture an agent when an operation against you has
+								been detected
+							</li></td
+						>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h3 id="operations">Operations</h3>
+		<p>Operations are missions that can be launched by your Spies.</p>
+		<p>
+			Each operation has a difficulty level that determines several factors
+			according to the table below:
+		</p>
+		<div class="table-wrapper">
+			<table>
+				<thead>
+					<tr>
+						<th>Difficulty</th>
+						<th>Effect</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Easy</td>
+						<td
+							><li>0% chance of complications each day</li>
+							<li>
+								30% chance of operation detection by the targeted enemy faction
+							</li>
+							<li>
+								0% chance of agent capture when the operation is detected
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Medium</td>
+						<td
+							><li>5% chance of complications each day</li>
+							<li>
+								30% chance of operation detection by the targeted enemy faction
+							</li>
+							<li>
+								20% chance of agent capture when the operation is detected
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Hard</td>
+						<td
+							><li>10% chance of complications each day</li>
+							<li>
+								30% chance of operation detection by the targeted enemy faction
+							</li>
+							<li>
+								40% chance of agent capture when the operation is detected
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Epic</td>
+						<td
+							><li>15% chance of complications each day</li>
+							<li>
+								30% chance of operation detection by the targeted enemy faction
+							</li>
+							<li>
+								60% chance of agent capture when the operation is detected
+							</li></td
+						>
+					</tr>
+					<tr>
+						<td>Special</td>
+						<td
+							><li>0% chance of complications each day</li>
+							<li>
+								0% chance of operation detection by the targeted enemy faction
+							</li></td
+						>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h3><strong>List of Operations:</strong></h3>
+		<h4>Probe Setup</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 50 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | <strong>Difficulty</strong>: Easy
+			</li>
+			<li><strong>Infiltration Levels Required</strong>: N/A</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Reveals all information and units in the region</li>
+				<li>
+					+ Advances detection of any <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#sietches">Sietch</a
+					> in the region
+				</li>
+			</ul>
+		</p>
+
+		<h4>Gear Sabotage</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 100 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | <strong>Difficulty</strong>: Easy
+			</li>
+			<li><strong>Infiltration Levels Required</strong>: Spacing Guild 1</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Reduces enemy units Power and Speed in the Region</li>
+				<li>
+					+ -20% <a class="link" target="_blank" href="buildings.html#missile"
+						>Missile Battery</a
+					> Power
+				</li>
+			</ul>
+		</p>
+
+		<h4>Supply Drop</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 100 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | <strong>Difficulty</strong>: Easy
+			</li>
+			<li><strong>Infiltration Levels Required</strong>: Arrakis 1</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Gives supply and health regeneration to allied units in the Region
+				</li>
+			</ul>
+		</p>
+
+		<h4>Scavenger Team</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 100 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 100 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Easy
+			</li>
+			<li><strong>Infiltration Levels Required</strong>: Arrakis 1</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Converts 100% of the Power of dying Military Units in to <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#solari">Solaris</a
+					>
+				</li>
+				<li>
+					+ Allies gain 20% more resources when pillaging a <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#villages">Village</a
+					>
+				</li>
+			</ul>
+		</p>
+
+		<h4>Consolidation</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 100 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 100 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Easy
+			</li>
+			<li><strong>Infiltration Levels Required</strong>: Spacing Guild 1</li>
+			<li><strong>Factions</strong>: Corrino</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ +3 Armor to units and structures in the region</li>
+			</ul>
+		</p>
+
+		<h4>Arrakis Diplomacy</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 150 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Medium
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: CHOAM 1 | Landsraad 1
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="atreides.html">Atreides</a
+				>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Disbands the Fremen Raids and increases relations with the <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#sietches">Sietches</a
+					> in the region
+				</li>
+			</ul>
+		</p>
+
+		<h4>Combat Drugs</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 150 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Medium
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
+				1
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="harkonnen.html">Harkonnen</a
+				>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Their Power and Speed are increased during the effect</li>
+				<li>− Allied units in combat lose health and supply each second</li>
+			</ul>
+		</p>
+
+		<h4>Poison the Reserves</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 150 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Medium
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
+				1
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="smugglers.html">Smugglers</a
+				>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Increases the Supply drain and prevents Supply regeneration for
+					opponents
+				</li>
+			</ul>
+		</p>
+
+		<h4>Sand Cloak</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 150 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 150 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Medium
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Arrakis 1 | Spacing Guild
+				1
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="fremen.html">Fremen</a
+				>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Allied military units are invisible for 2 days</li>
+			</ul>
+		</p>
+
+		<h4>Interdiction Zone</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 200 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 200 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Medium
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Spacing Guild 1 |
+				Landsraad 1
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="fremen.html">Corrino</a
+				>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ The use of Carryalls is forbidden and Blocks the Shuttle ability for
+					enemies
+				</li>
+			</ul>
+		</p>
+
+		<h4>Cease Fire</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 500 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Hard
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: CHOAM 2 | Landsraad 2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Interrupts and prevents battles in target Region for 2 days</li>
+			</ul>
+		</p>
+
+		<h4>Crowd Manipulation</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 500 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Hard
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Spacing Guild 2 |
+				Landsraad 2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ The selected <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#villages">Village</a
+					> starts a rebellion
+				</li>
+			</ul>
+		</p>
+
+		<h4>Defense Sabotage</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 500 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 500 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Hard
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Arrakis 2 | Spacing Guild
+				2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ -50% Power for the target Main Base</li>
+				<li>+ +50% damage received by the target Main Base</li>
+			</ul>
+		</p>
+
+		<h4>Atomics</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 600 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 6,000 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Epic
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Arrakis 2 | Spacing Guild
+				2 | CHOAM | 2 | Landsraad 2
+			</li>
+			<li>
+				<strong>Factions</strong>: <a
+					class="link"
+					target="_blank"
+					href="atreides.html">Atreides</a
+				> | <a class="link" target="_blank" href="harkonnen.html">Harkonnen</a> |
+				<a class="link" target="_blank" href="smugglers.html">Smugglers</a>
+			</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Fires your Atomics in the selected region, damaging all units and
+					devastating <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#villages">Villages</a
+					>
+				</li>
+				<li>
+					− Reduces <a
+						class="link"
+						target="_blank"
+						href="arrakis.html#landsraad">Landsraad Standing</a
+					> by 300
+				</li>
+			</ul>
+		</p>
+
+		<!-- <h4>CHOAM Shares</h4> 
+									<ul>
+										<li><strong>Cost</strong>: 50 <a class="link" target="_blank" href="arrakis.html#intel">Intel</a> | 10,000 <a class="link" target="_blank" href="arrakis.html#solari">Solari</a> | <strong>Difficulty</strong>: Special</li>
+										<li><strong>Infiltration Levels Required</strong>: CHOAM 2</li>
+										<li><strong>Factions</strong>: All</li>
+									</ul>
+									<p><ul>
+										<li>+ Buy CHOAM shares to increase your Hegemony by 500</li>
+									</ul></p> -->
+
+		<!-- <h4>Political Audit</h4> 
+									<ul>
+										<li><strong>Cost</strong>: 50 <a class="link" target="_blank" href="arrakis.html#intel">Intel</a> | 300 <a class="link" target="_blank" href="arrakis.html#influence">Influence</a> | <strong>Difficulty</strong>: Special</li>
+										<li><strong>Infiltration Levels Required</strong>: Landsraad 2</li>
+										<li><strong>Factions</strong>: <a class="link" target="_blank" href="atreides.html">Atreides</a> | <a class="link" target="_blank" href="harkonnen.html">Harkonnen</a> | <a class="link" target="_blank" href="smugglers.html">Smugglers</a></li>
+									</ul>
+									<p><ul>
+										<li>+ Grants 30 <a class="link" target="_blank" href="arrakis.html#landsraad">Landsraad Standing</a></li>
+									</ul></p> -->
+
+		<h3 id="assassinations">Assassination Operations</h3>
+		<h4>Protocol Surveys</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 200 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 200 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Assassination 1/4
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Target Faction 1 |
+				Arrakis 1 | Spacing Guild 1 | CHOAM 1 | Landsraad 1
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Gain access to 1 more slot in the target Faction Infiltration</li>
+				<li>
+					+ Sets up the assassination of the target faction leader. Can be
+					launched at the same time as other missions
+				</li>
+			</ul>
+		</p>
+
+		<h4>Infiltration Cells</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 500 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 1,000 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Assassination 2/4
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Target Faction 2 |
+				Arrakis 2 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>+ Gain access to 1 more slot in the target Faction Infiltration</li>
+				<li>
+					+ Sets up the assassination of the target faction leader. Can be
+					launched at the same time as other missions
+				</li>
+			</ul>
+		</p>
+
+		<h4>Proximity Infiltration</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 500 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 1,000 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Assassination 3/4
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Target Faction 2 |
+				Arrakis 2 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Allows for the assassination of the target faction leader. Can be
+					launched at the same time as other missions
+				</li>
+			</ul>
+		</p>
+
+		<h4>Assassination</h4>
+		<ul>
+			<li>
+				<strong>Cost</strong>: 1000 <a
+					class="link"
+					target="_blank"
+					href="arrakis.html#intel">Intel</a
+				> | 5,000 <a class="link" target="_blank" href="arrakis.html#solari"
+					>Solari</a
+				> | <strong>Difficulty</strong>: Assassination 4/4
+			</li>
+			<li>
+				<strong>Infiltration Levels Required</strong>: Target Faction 3 |
+				Arrakis 3 | Spacing Guild 2 | CHOAM 2 | Landsraad 2
+			</li>
+			<li><strong>Factions</strong>: All</li>
+		</ul>
+		<p>
+			<ul>
+				<li>
+					+ Assassinate the leader of the target faction. The player will be
+					removed from the game
+				</li>
+			</ul>
+		</p>
+		<!-- END ESPIONAGE -->
+
+		<!-- LANDSRAAD COUNCIL -->
+		<header id="header"></header>
+		<h2 id="landsraad">Landsraad Council</h2>
+		<h3 id="resolutions">Resolutions</h3>
+		**TO DO**
+
+		<h3 id="charters">Charters</h3>
+		**TO DO**
+		<!-- END LANDSRAAD COUNCIL -->
+
+		<!-- SPECIAL EVENTS -->
+		<header id="header"></header>
+		<h2 id="specialEvents">Special Events</h2>
+		<h3 id="eventInfo">General Info</h3>
+		**TO DO**
+
+		<h3 id="allEvents">Event List</h3>
+		**TO DO**
+		<!-- END SPECIAL EVENTS -->
+
+		<!-- POINTS OF INTEREST -->
+		<header id="header"></header>
+		<h2 id="POI">Points of Interest</h2>
+		<h3 id="generalPOI">General Info</h3>
+		**TO DO**
+
+		<h3 id="allPOI">Points of Interest List</h3>
+		**TO DO**
+	</section>
+</Layout>

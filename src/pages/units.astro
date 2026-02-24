@@ -1,0 +1,135 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { units } from "../data/units";
+import UnitCard from "../components/UnitCard.astro";
+import BackToTop from "../components/BackToTop.astro";
+import type { UnitCategory } from "../data/types";
+import unitsBanner from "../assets/banners/unitsBanner.jpg";
+import { Image } from "astro:assets";
+
+const CATEGORY_ORDER: UnitCategory[] = [
+	"atreides",
+	"harkonnen",
+	"smugglers",
+	"fremen",
+	"corrino",
+	"ecaz",
+	"vernius",
+	"militia",
+	"raider",
+	"renegade",
+	"misc",
+];
+
+const CATEGORY_LABELS: Record<UnitCategory, string> = {
+	atreides: "House Atreides",
+	harkonnen: "House Harkonnen",
+	smugglers: "Smugglers",
+	fremen: "Fremen",
+	corrino: "House Corrino",
+	ecaz: "House Ecaz",
+	vernius: "House Vernius",
+	militia: "Militia",
+	raider: "Local Raiders",
+	renegade: "Renegades",
+	misc: "Miscellaneous",
+};
+
+const grouped = CATEGORY_ORDER.map((category, ci) => ({
+	category,
+	label: CATEGORY_LABELS[category],
+	sectionNumber: ci + 1,
+	units: units.filter((u) => u.category === category),
+}));
+
+// 4 columns for the ToC (11 groups: 3, 3, 3, 2)
+const tocCols = [
+	grouped.slice(0, 3),
+	grouped.slice(3, 6),
+	grouped.slice(6, 9),
+	grouped.slice(9, 11),
+];
+---
+
+<Layout
+	title="Units"
+	description="All the content for the Military Units in Dune: Spice Wars. Information about their Health, Power, Recruitment Cost, Upkeep, Required Developments, Abilities | Duneopedia"
+>
+	<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Units</h1>
+		</header>
+		<span class="image main">
+			<Image src={unitsBanner} alt="Units Banner" />
+		</span>
+
+		<blockquote>
+			"You fight when the necessity arises—no matter the mood! Mood's a thing
+			for cattle or making love or playing the baliset. It's not for fighting."
+		</blockquote>
+
+		<!-- LIST OF CONTENTS -->
+		<h4 id="top">List of Contents</h4>
+		<div id="contents" class="row">
+			{
+				tocCols.map((col) => (
+					<div class="col-3 col-12-medium">
+						<ul>
+							{col.map((group) => (
+								<>
+									<a href={`#${group.category}`}>
+										<li>
+											<strong>
+												{group.sectionNumber}.0 | {group.label}
+											</strong>
+										</li>
+									</a>
+									<ul>
+										{group.units.map((u, i) => (
+											<a href={`#${u.id}`}>
+												<li>
+													{group.sectionNumber}.{i + 1} | {u.name}
+												</li>
+											</a>
+										))}
+									</ul>
+								</>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<!-- END LIST OF CONTENTS -->
+
+		<!-- GENERAL INFO -->
+		<h4>General Info</h4>
+		<ul>
+			<li>
+				+ A unit's Power equals the total base damage their attack will deal to
+				an enemy
+			</li>
+			<li>+ Armor reduces incoming damage by the amount of armor</li>
+			<li>+ Attacks always deal at least 1 damage</li>
+			<li>
+				+ Units gain XP as they kill other units. Every level they gain
+				increases their HP and Supply by +20, and their Power by +1
+			</li>
+		</ul>
+		<!-- END GENERAL INFO -->
+
+		{
+			grouped.map((group) => (
+				<>
+					<header id="header" />
+					<h2 id={group.category}>{group.label}</h2>
+					{group.units.map((u) => (
+						<UnitCard unit={u} />
+					))}
+					<BackToTop />
+				</>
+			))
+		}
+	</section>
+</Layout>
